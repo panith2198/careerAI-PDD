@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Sticky section header per design.md Section 24.15:
+     "TODAY", "YESTERDAY", "EARLIER" in Label.Small uppercase, color_text_tertiary -->
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tv_section_header"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="TODAY"
+    style="@style/TextAppearance_AiCareer_Label_Small"
+    android:textColor="@color/color_text_tertiary"
+    android:textAllCaps="true"
+    android:letterSpacing="0.08"
+    android:paddingHorizontal="20dp"
+    android:paddingTop="16dp"
+    android:paddingBottom="6dp"
+    android:background="@android:color/transparent" />

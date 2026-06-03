@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_background"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="24dp">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Assessment Completed"
+            style="@style/TextAppearance_AiCareer_Headline_Large"
+            android:textColor="@color/color_text_primary"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="AI Competency Evaluation Profile"
+            style="@style/TextAppearance_AiCareer_Body_Small"
+            android:textColor="@color/color_text_secondary"
+            android:layout_marginTop="4dp"
+            app:layout_constraintTop_toBottomOf="@id/tv_title"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <!-- Immersive Score Gauge Container -->
+        <FrameLayout
+            android:id="@+id/score_gauge_container"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:layout_marginTop="28dp"
+            app:layout_constraintTop_toBottomOf="@id/tv_subtitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <!-- Background Track circle -->
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/pb_score_track"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                app:indicatorSize="160dp"
+                app:trackThickness="12dp"
+                android:progress="100"
+                app:indicatorColor="@color/color_surface_3"
+                app:trackColor="@android:color/transparent" />
+
+            <!-- Active Score circular progress -->
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/pb_score"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                app:indicatorSize="160dp"
+                app:trackThickness="12dp"
+                android:progress="0"
+                app:trackCornerRadius="6dp"
+                app:indicatorColor="@color/color_emerald"
+                app:trackColor="@android:color/transparent" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_gravity="center">
+
+                <TextView
+                    android:id="@+id/tv_score"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0%"
+                    style="@style/TextAppearance_AiCareer_Mono_Large"
+                    android:textColor="@color/color_text_primary"
+                    android:textSize="36sp" />
+
+                <TextView
+                    android:id="@+id/tv_score_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="SCORE"
+                    style="@style/TextAppearance_AiCareer_Label_Small"
+                    android:textColor="@color/color_text_tertiary"
+                    android:layout_marginTop="2dp" />
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+        <!-- Grade Badge Pill -->
+        <TextView
+            android:id="@+id/tv_grade"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="GRADE A"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="6dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_badge_pill_rose"
+            android:backgroundTint="@color/color_primary_dim"
+            style="@style/TextAppearance_AiCareer_Mono_Medium"
+            android:textColor="@color/color_primary_bright"
+            app:layout_constraintTop_toBottomOf="@id/score_gauge_container"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- MPAndroidChart RadarChart for skill breakdown -->
+        <com.github.mikephil.charting.charts.RadarChart
+            android:id="@+id/radar_chart"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:layout_marginTop="24dp"
+            app:layout_constraintTop_toBottomOf="@id/tv_grade"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- AI Feedback Card (Glass Level 3) -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_feedback"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="@color/color_surface_2">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp">
+
+                <!-- Left cyan decorator bar -->
+                <View
+                    android:id="@+id/v_accent_bar"
+                    android:layout_width="3dp"
+                    android:layout_height="0dp"
+                    android:background="@color/color_cyan"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_feedback_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="✨ AI Insights &amp; Gap Analysis"
+                    style="@style/TextAppearance_AiCareer_Title_Medium"
+                    android:textColor="@color/color_cyan"
+                    android:layout_marginStart="16dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/v_accent_bar" />
+
+                <TextView
+                    android:id="@+id/tv_feedback"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Evaluating results..."
+                    style="@style/TextAppearance_AiCareer_Body_Medium"
+                    android:textColor="@color/color_text_primary"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="16dp"
+                    app:layout_constraintTop_toBottomOf="@id/tv_feedback_title"
+                    app:layout_constraintStart_toEndOf="@id/v_accent_bar"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Actions section -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_view_roadmap"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="View Personalized Roadmap"
+            android:textAllCaps="false"
+            android:textColor="@color/color_on_primary"
+            android:backgroundTint="@color/color_primary"
+            android:layout_marginTop="28dp"
+            app:cornerRadius="26dp"
+            app:layout_constraintTop_toBottomOf="@id/cv_feedback"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_view_gap"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="Analyze Skill Gaps"
+            android:textAllCaps="false"
+            android:textColor="@color/color_primary_bright"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            app:strokeColor="@color/color_border_violet"
+            app:strokeWidth="1dp"
+            android:backgroundTint="@color/color_primary_dim"
+            android:layout_marginTop="12dp"
+            app:cornerRadius="26dp"
+            app:layout_constraintTop_toBottomOf="@id/btn_view_roadmap"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_back_dashboard"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="Back to Dashboard"
+            android:textAllCaps="false"
+            android:textColor="@color/color_text_secondary"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_marginTop="12dp"
+            app:layout_constraintTop_toBottomOf="@id/btn_view_gap"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Confetti Overlay animation support -->
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottie_confetti"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:lottie_autoPlay="false"
+            app:lottie_loop="false"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

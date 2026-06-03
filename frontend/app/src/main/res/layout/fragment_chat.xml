@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_background">
+
+    <!-- ═══════════════════════════════════════════════════
+         TOOLBAR — Robot Icon + Title + Connected Status
+         ═══════════════════════════════════════════════════ -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/chat_header"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:background="@color/color_surface_1"
+        android:paddingHorizontal="16dp"
+        android:elevation="4dp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- Robot Bot Icon -->
+        <ImageView
+            android:id="@+id/iv_bot_icon"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@drawable/ic_smart_bot"
+            android:contentDescription="AI Bot"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <!-- Title + Subtitle column -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginStart="12dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/iv_bot_icon"
+            app:layout_constraintEnd_toStartOf="@id/layout_status_badge">
+
+            <TextView
+                android:id="@+id/tv_header_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="AI Smart Navigator Chat"
+                style="@style/TextAppearance_AiCareer_Headline_Small"
+                android:textColor="@color/color_text_primary"
+                android:textSize="16sp"
+                android:maxLines="1"
+                android:ellipsize="end" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Powered by Mistral AI + RAG"
+                style="@style/TextAppearance_AiCareer_Label_Small"
+                android:textColor="@color/color_text_tertiary"
+                android:textSize="11sp"
+                android:layout_marginTop="1dp" />
+        </LinearLayout>
+
+        <!-- Connected Status Badge -->
+        <LinearLayout
+            android:id="@+id/layout_status_badge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@drawable/bg_confidence_badge"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="4dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <View
+                android:id="@+id/ai_status_dot"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:background="@drawable/bg_pulse_dot_cyan" />
+
+            <TextView
+                android:id="@+id/tv_header_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Connected"
+                style="@style/TextAppearance_AiCareer_Label_Small"
+                android:textColor="@color/color_cyan"
+                android:textSize="11sp"
+                android:layout_marginStart="6dp" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- ═══════════════════════════════════════════════════
+         SESSION CONTROL PANEL — CRUD OPERATIONS
+         ═══════════════════════════════════════════════════ -->
+    <LinearLayout
+        android:id="@+id/layout_session_controls"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@color/color_surface_1"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="8dp"
+        android:elevation="2dp"
+        app:layout_constraintTop_toBottomOf="@id/chat_header">
+
+        <!-- History Selector Button -->
+        <LinearLayout
+            android:id="@+id/btn_select_session"
+            android:layout_width="0dp"
+            android:layout_height="38dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@drawable/bg_suggestion_card"
+            android:paddingHorizontal="12dp"
+            android:clickable="true"
+            android:focusable="true">
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/ic_history"
+                android:tint="@color/color_cyan"
+                android:contentDescription="History" />
+
+            <TextView
+                android:id="@+id/tv_active_session_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select Session History"
+                style="@style/TextAppearance_AiCareer_Body_Small"
+                android:textColor="@color/color_text_primary"
+                android:textSize="12sp"
+                android:layout_marginStart="8dp"
+                android:maxLines="1"
+                android:ellipsize="end" />
+        </LinearLayout>
+
+        <!-- New Chat Button -->
+        <ImageButton
+            android:id="@+id/btn_new_chat"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:src="@drawable/ic_plus"
+            android:tint="@color/color_cyan"
+            android:background="@drawable/bg_suggestion_card"
+            android:layout_marginStart="8dp"
+            android:padding="10dp"
+            android:contentDescription="New Chat Session" />
+
+        <!-- Clear/Delete Chat Button -->
+        <ImageButton
+            android:id="@+id/btn_delete_chat"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:src="@drawable/ic_delete"
+            android:tint="@color/color_error"
+            android:background="@drawable/bg_suggestion_card"
+            android:layout_marginStart="8dp"
+            android:padding="10dp"
+            android:contentDescription="Delete Current Chat" />
+    </LinearLayout>
+
+    <!-- ═══════════════════════════════════════════════════
+         AI THINKING PROGRESS BAR
+         ═══════════════════════════════════════════════════ -->
+    <ProgressBar
+        android:id="@+id/pb_thinking"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/color_cyan"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/layout_session_controls" />
+
+    <!-- ═══════════════════════════════════════════════════
+         MESSAGE LIST — RecyclerView
+         ═══════════════════════════════════════════════════ -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_chat_messages"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:padding="12dp"
+        android:clipToPadding="false"
+        android:overScrollMode="never"
+        app:layout_constraintTop_toBottomOf="@id/layout_session_controls"
+        app:layout_constraintBottom_toTopOf="@id/layout_suggestions"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- ═══════════════════════════════════════════════════
+         SUGGESTED QUESTIONS — Horizontal Scroll Cards
+         ═══════════════════════════════════════════════════ -->
+    <LinearLayout
+        android:id="@+id/layout_suggestions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:background="@color/color_surface_1"
+        app:layout_constraintBottom_toTopOf="@id/layout_input">
+
+        <TextView
+            android:id="@+id/tv_suggest_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SUGGESTED QUESTIONS"
+            style="@style/TextAppearance_AiCareer_Label_Small"
+            android:textColor="@color/color_text_tertiary"
+            android:textSize="10sp"
+            android:letterSpacing="0.08"
+            android:layout_marginBottom="8dp" />
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none"
+            android:overScrollMode="never">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <!-- Suggestion 1 -->
+                <LinearLayout
+                    android:id="@+id/chip_q1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/bg_suggestion_card"
+                    android:paddingHorizontal="14dp"
+                    android:paddingVertical="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:src="@drawable/ic_rocket"
+                        android:tint="@color/color_primary_bright"
+                        android:contentDescription="Rocket" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="How do I become an Android Architect?"
+                        style="@style/TextAppearance_AiCareer_Body_Small"
+                        android:textColor="@color/color_text_secondary"
+                        android:textSize="12sp"
+                        android:layout_marginStart="8dp"
+                        android:maxLines="1" />
+                </LinearLayout>
+
+                <!-- Suggestion 2 -->
+                <LinearLayout
+                    android:id="@+id/chip_q2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/bg_suggestion_card"
+                    android:paddingHorizontal="14dp"
+                    android:paddingVertical="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:src="@drawable/ic_chart_bar"
+                        android:tint="@color/color_primary_bright"
+                        android:contentDescription="Chart" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="What is the average salary for DevOps?"
+                        style="@style/TextAppearance_AiCareer_Body_Small"
+                        android:textColor="@color/color_text_secondary"
+                        android:textSize="12sp"
+                        android:layout_marginStart="8dp"
+                        android:maxLines="1" />
+                </LinearLayout>
+
+                <!-- Suggestion 3 -->
+                <LinearLayout
+                    android:id="@+id/chip_q3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/bg_suggestion_card"
+                    android:paddingHorizontal="14dp"
+                    android:paddingVertical="10dp"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:src="@drawable/ic_ai_sparkle"
+                        android:tint="@color/color_primary_bright"
+                        android:contentDescription="Sparkle" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Show my career roadmap milestones"
+                        style="@style/TextAppearance_AiCareer_Body_Small"
+                        android:textColor="@color/color_text_secondary"
+                        android:textSize="12sp"
+                        android:layout_marginStart="8dp"
+                        android:maxLines="1" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </HorizontalScrollView>
+    </LinearLayout>
+
+    <!-- ═══════════════════════════════════════════════════
+         INPUT BAR — Sparkle Icon + EditText + Send Button
+         ═══════════════════════════════════════════════════ -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_surface_1"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="10dp"
+        android:elevation="8dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <!-- PDF Attachment Preview Card -->
+        <LinearLayout
+            android:id="@+id/layout_pdf_preview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@drawable/bg_confidence_badge"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="4dp"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/input_container"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <ImageView
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:src="@drawable/ic_attach_file"
+                android:tint="@color/color_cyan"
+                android:contentDescription="Attached PDF" />
+
+            <TextView
+                android:id="@+id/tv_pdf_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="document.pdf"
+                style="@style/TextAppearance_AiCareer_Label_Small"
+                android:textColor="@color/color_cyan"
+                android:textSize="11sp"
+                android:layout_marginStart="6dp"
+                android:maxLines="1"
+                android:ellipsize="end" />
+
+            <ImageButton
+                android:id="@+id/btn_remove_pdf"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/ic_delete"
+                android:tint="@color/color_cyan"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="2dp"
+                android:layout_marginStart="8dp"
+                android:contentDescription="Remove PDF" />
+        </LinearLayout>
+
+        <!-- Input Field Container -->
+        <LinearLayout
+            android:id="@+id/input_container"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@drawable/bg_chat_input"
+            android:paddingHorizontal="14dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_send">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_ai_sparkle"
+                android:tint="@color/color_text_tertiary"
+                android:contentDescription="AI" />
+
+            <ImageButton
+                android:id="@+id/btn_attach_pdf"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_attach_file"
+                android:tint="@color/color_text_tertiary"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="4dp"
+                android:layout_marginStart="8dp"
+                android:contentDescription="Attach PDF" />
+
+            <EditText
+                android:id="@+id/et_chat_input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Ask about skills, paths, or jobs..."
+                android:textColorHint="@color/color_text_tertiary"
+                android:textColor="@color/color_text_primary"
+                android:background="@android:color/transparent"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="10dp"
+                android:inputType="textMultiLine"
+                android:maxLines="4"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <!-- Send Button -->
+        <ImageButton
+            android:id="@+id/btn_send"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_send_arrow"
+            android:background="@drawable/bg_send_button"
+            android:scaleType="centerInside"
+            android:padding="12dp"
+            android:layout_marginStart="10dp"
+            android:contentDescription="Send message"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

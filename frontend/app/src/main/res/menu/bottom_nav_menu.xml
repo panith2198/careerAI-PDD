@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/avd_home"
+        android:title="Home" />
+    <item
+        android:id="@+id/navigation_career"
+        android:icon="@drawable/avd_roadmap"
+        android:title="Career" />
+    <item
+        android:id="@+id/navigation_chat"
+        android:icon="@drawable/avd_chat"
+        android:title="AI Chat" />
+    <item
+        android:id="@+id/navigation_jobs"
+        android:icon="@drawable/avd_jobs"
+        android:title="Jobs" />
+    <item
+        android:id="@+id/navigation_profile"
+        android:icon="@drawable/avd_profile"
+        android:title="Profile" />
+</menu>

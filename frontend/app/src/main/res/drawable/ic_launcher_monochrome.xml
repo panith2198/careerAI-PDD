@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Monochrome version of the CareerAI logo for Android 13+ themed icons.
+     Single color only — the system applies the wallpaper-based tint. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Arrow shaft -->
+    <path
+        android:pathData="M54,28 L54,78"
+        android:strokeWidth="4"
+        android:strokeColor="#000000"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000" />
+
+    <!-- Arrow head -->
+    <path
+        android:pathData="M42,42 L54,28 L66,42"
+        android:strokeWidth="4"
+        android:strokeColor="#000000"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="#00000000" />
+
+    <!-- Left branch -->
+    <path
+        android:pathData="M54,58 L38,50"
+        android:strokeWidth="2.5"
+        android:strokeColor="#000000"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000" />
+
+    <!-- Right branch -->
+    <path
+        android:pathData="M54,58 L70,50"
+        android:strokeWidth="2.5"
+        android:strokeColor="#000000"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000" />
+
+    <!-- Lower branches -->
+    <path
+        android:pathData="M54,68 L36,64"
+        android:strokeWidth="2"
+        android:strokeColor="#000000"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000" />
+    <path
+        android:pathData="M54,68 L72,64"
+        android:strokeWidth="2"
+        android:strokeColor="#000000"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000" />
+
+    <!-- Nodes -->
+    <path android:pathData="M54,28 m-4,0 a4,4 0,1 1,8 0 a4,4 0,1 1,-8 0" android:fillColor="#000000" />
+    <path android:pathData="M54,58 m-3.5,0 a3.5,3.5 0,1 1,7 0 a3.5,3.5 0,1 1,-7 0" android:fillColor="#000000" />
+    <path android:pathData="M38,50 m-3,0 a3,3 0,1 1,6 0 a3,3 0,1 1,-6 0" android:fillColor="#000000" />
+    <path android:pathData="M70,50 m-3,0 a3,3 0,1 1,6 0 a3,3 0,1 1,-6 0" android:fillColor="#000000" />
+    <path android:pathData="M54,68 m-3,0 a3,3 0,1 1,6 0 a3,3 0,1 1,-6 0" android:fillColor="#000000" />
+    <path android:pathData="M36,64 m-2.5,0 a2.5,2.5 0,1 1,5 0 a2.5,2.5 0,1 1,-5 0" android:fillColor="#000000" />
+    <path android:pathData="M72,64 m-2.5,0 a2.5,2.5 0,1 1,5 0 a2.5,2.5 0,1 1,-5 0" android:fillColor="#000000" />
+
+    <!-- Base platform line -->
+    <path
+        android:pathData="M36,78 L72,78"
+        android:strokeWidth="3"
+        android:strokeColor="#000000"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000" />
+</vector>

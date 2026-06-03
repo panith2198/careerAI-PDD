@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingVertical="6dp"
+    android:paddingHorizontal="4dp">
+
+    <!-- AI Message Card with cyan left border accent -->
+    <LinearLayout
+        android:id="@+id/card_ai_message"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_ai_message_card"
+        android:paddingStart="16dp"
+        android:paddingEnd="14dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="14dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_max="340dp"
+        app:layout_constraintHorizontal_bias="0.0">
+
+        <!-- Row: Confidence Badge + Copy Button -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <!-- Confidence badge pill -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@drawable/bg_confidence_badge"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="3dp">
+
+                <ImageView
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:src="@drawable/ic_check"
+                    android:tint="@color/color_cyan"
+                    android:contentDescription="Verified" />
+
+                <TextView
+                    android:id="@+id/tv_badge_confidence"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="98% CONFIDENCE"
+                    style="@style/TextAppearance_AiCareer_Mono_Small"
+                    android:textColor="@color/color_cyan"
+                    android:textSize="10sp"
+                    android:letterSpacing="0.04"
+                    android:layout_marginStart="4dp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <!-- Copy to clipboard button -->
+            <ImageButton
+                android:id="@+id/btn_copy"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_copy"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="4dp"
+                android:contentDescription="Copy message" />
+        </LinearLayout>
+
+        <!-- AI Message Text Body -->
+        <TextView
+            android:id="@+id/tv_message_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Based on MistralAI analytics, Kotlin and Hilt skills represent crucial benchmarks."
+            style="@style/TextAppearance_AiCareer_Body_Medium"
+            android:textColor="@color/color_text_primary"
+            android:textSize="14sp"
+            android:lineSpacingExtra="3dp"
+            android:layout_marginTop="10dp" />
+
+        <!-- Divider before citations -->
+        <View
+            android:id="@+id/divider_citations"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/color_divider"
+            android:layout_marginTop="12dp" />
+
+        <!-- Expand/Collapse Citation Toggle -->
+        <LinearLayout
+            android:id="@+id/layout_citation_toggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="8dp"
+            android:clickable="true"
+            android:focusable="true">
+
+            <ImageView
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:src="@drawable/ic_arrow_right"
+                android:tint="@color/color_cyan"
+                android:contentDescription="Expand" />
+
+            <TextView
+                android:id="@+id/tv_expand_citations"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="VIEW RAG CITATION SOURCES"
+                style="@style/TextAppearance_AiCareer_Label_Small"
+                android:textColor="@color/color_cyan"
+                android:textSize="10sp"
+                android:letterSpacing="0.06"
+                android:layout_marginStart="6dp" />
+        </LinearLayout>
+
+        <!-- Expanded Citations Content -->
+        <LinearLayout
+            android:id="@+id/layout_citations_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/color_surface_glass"
+            android:padding="10dp"
+            android:layout_marginTop="6dp"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tv_citations_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Source: RAG KB Document (kb_android_architect_1.pdf)"
+                style="@style/TextAppearance_AiCareer_Body_Small"
+                android:textColor="@color/color_text_tertiary"
+                android:textSize="11sp"
+                android:lineSpacingExtra="2dp" />
+
+            <TextView
+                android:id="@+id/tv_model_used"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Model: mistral-large-latest"
+                style="@style/TextAppearance_AiCareer_Mono_Small"
+                android:textColor="@color/color_primary_bright"
+                android:textSize="9sp"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

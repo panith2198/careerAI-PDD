@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_auth_gradient"
+    android:importantForAutofill="noExcludeDescendants">
+
+    <!-- Top Navigation Toolbar inside Skills -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_surface_1">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingEnd="16dp">
+
+                <ImageView
+                    android:id="@+id/btn_back"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:padding="8dp"
+                    android:background="@drawable/bg_icon_button_glass"
+                    android:src="@drawable/ic_back"
+                    android:contentDescription="Go back"
+                    app:tint="@color/color_text_primary" />
+
+                <TextView
+                    android:id="@+id/tv_toolbar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:text="Technical Skills Manager"
+                    style="@style/TextAppearance_AiCareer_Title_Large"
+                    android:textColor="@color/color_text_primary"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <!-- 1. LIST MODE CONTAINER (Default View) -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_list_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="20dp"
+            android:visibility="visible">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_header_illustration"
+                android:layout_width="100dp"
+                android:layout_height="90dp"
+                app:cardCornerRadius="16dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/color_border"
+                app:cardBackgroundColor="@color/color_surface_glass_strong"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/tv_desc">
+
+                <ImageView
+                    android:id="@+id/iv_header_illustration"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_skills_header"
+                    android:scaleType="centerCrop" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="My Skills Profile"
+                style="@style/TextAppearance_AiCareer_Headline_Large"
+                android:textColor="@color/color_text_primary"
+                android:layout_marginEnd="12dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/iv_header_illustration" />
+
+            <TextView
+                android:id="@+id/tv_desc"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Set and declare your experience and technical proficiency metrics."
+                style="@style/TextAppearance_AiCareer_Body_Medium"
+                android:textColor="@color/color_text_secondary"
+                android:layout_marginEnd="12dp"
+                app:layout_constraintTop_toBottomOf="@id/tv_title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/iv_header_illustration" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_trigger_add_wizard"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:layout_marginTop="16dp"
+                android:text="+ Declare New Technical Skill"
+                android:textColor="@color/color_on_primary"
+                app:cornerRadius="27dp"
+                android:backgroundTint="@color/color_primary"
+                app:layout_constraintTop_toBottomOf="@id/tv_desc" />
+
+            <!-- Swipe-to-delete List -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_skills"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                app:layout_constraintTop_toBottomOf="@id/btn_trigger_add_wizard"
+                app:layout_constraintBottom_toTopOf="@id/btn_improve_skills" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_improve_skills"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:text="Verify Skills via Assessments"
+                android:textAllCaps="false"
+                android:textColor="@color/color_cyan"
+                app:strokeColor="@color/color_border"
+                app:strokeWidth="1dp"
+                app:cornerRadius="26dp"
+                android:backgroundTint="@color/color_surface_2"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- 2. 3-STEP SKILLS WIZARD CONTAINER (Hidden by Default) -->
+        <ScrollView
+            android:id="@+id/sv_wizard_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:visibility="gone">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="20dp">
+
+                <!-- Step Indicator Header -->
+                <LinearLayout
+                    android:id="@+id/ll_step_indicator"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/tv_indicator_step_1"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:text="1"
+                        android:gravity="center"
+                        android:background="@drawable/bg_badge_pill_rose"
+                        android:backgroundTint="@color/color_primary"
+                        android:textColor="@color/color_on_primary"
+                        style="@style/TextAppearance_AiCareer_Mono_Small"
+                        android:textStyle="bold" />
+
+                    <View
+                        android:id="@+id/view_line_1"
+                        android:layout_width="60dp"
+                        android:layout_height="2dp"
+                        android:background="@color/color_surface_3"
+                        android:layout_marginHorizontal="8dp" />
+
+                    <TextView
+                        android:id="@+id/tv_indicator_step_2"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:text="2"
+                        android:gravity="center"
+                        android:background="@drawable/bg_badge_pill_rose"
+                        android:backgroundTint="@color/color_surface_3"
+                        android:textColor="@color/color_text_secondary"
+                        style="@style/TextAppearance_AiCareer_Mono_Small"
+                        android:textStyle="bold" />
+
+                    <View
+                        android:id="@+id/view_line_2"
+                        android:layout_width="60dp"
+                        android:layout_height="2dp"
+                        android:background="@color/color_surface_3"
+                        android:layout_marginHorizontal="8dp" />
+
+                    <TextView
+                        android:id="@+id/tv_indicator_step_3"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:text="3"
+                        android:gravity="center"
+                        android:background="@drawable/bg_badge_pill_rose"
+                        android:backgroundTint="@color/color_surface_3"
+                        android:textColor="@color/color_text_secondary"
+                        style="@style/TextAppearance_AiCareer_Mono_Small"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_wizard_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="Step 1: Choose Skill taxonomy"
+                    style="@style/TextAppearance_AiCareer_Headline_Medium"
+                    android:textColor="@color/color_primary_bright"
+                    app:layout_constraintTop_toBottomOf="@id/ll_step_indicator"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tv_wizard_desc"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Select the technology domain or canonical engineering skill."
+                    style="@style/TextAppearance_AiCareer_Body_Small"
+                    android:textColor="@color/color_text_secondary"
+                    app:layout_constraintTop_toBottomOf="@id/tv_wizard_title"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <!-- The Form Card Frame -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_form"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    app:strokeColor="@color/color_border"
+                    app:strokeWidth="1dp"
+                    app:cardBackgroundColor="@color/color_surface_2"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="2dp"
+                    app:layout_constraintTop_toBottomOf="@id/tv_wizard_desc">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="20dp">
+
+                        <!-- STEP 1 CONTAINER: Choose Skill -->
+                        <LinearLayout
+                            android:id="@+id/ll_step_1_container"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:visibility="visible">
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="Skill Name (e.g. Kotlin, Docker)"
+                                android:layout_marginBottom="16dp"
+                                style="@style/Widget.AiCareer.TextInputLayout"
+                                app:startIconDrawable="@drawable/ic_ai_sparkle"
+                                app:startIconTint="@color/color_text_secondary">
+
+                                <AutoCompleteTextView
+                                    android:id="@+id/actv_skill_search"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/color_text_primary"
+                                    android:singleLine="true"
+                                    android:importantForAutofill="no"
+                                    style="@style/TextAppearance_AiCareer_Body_Medium"
+                                    android:completionThreshold="1" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <TextView
+                                android:id="@+id/tv_selected_skill_badge"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="No skill selected yet"
+                                android:paddingHorizontal="12dp"
+                                android:paddingVertical="6dp"
+                                android:background="@drawable/bg_badge_pill_rose"
+                                android:backgroundTint="@color/color_surface_3"
+                                android:textColor="@color/color_text_secondary"
+                                style="@style/TextAppearance_AiCareer_Mono_Small" />
+
+                        </LinearLayout>
+
+                        <!-- STEP 2 CONTAINER: Experience & Level -->
+                        <LinearLayout
+                            android:id="@+id/ll_step_2_container"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:visibility="gone">
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/til_proficiency"
+                                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="16dp"
+                                android:hint="Self-Declared Proficiency Level"
+                                app:boxBackgroundColor="@color/color_surface_2"
+                                app:boxStrokeColor="@color/color_border"
+                                app:boxCornerRadiusTopStart="14dp"
+                                app:boxCornerRadiusTopEnd="14dp"
+                                app:boxCornerRadiusBottomStart="14dp"
+                                app:boxCornerRadiusBottomEnd="14dp"
+                                app:startIconDrawable="@drawable/ic_trend_up"
+                                app:startIconTint="@color/color_text_secondary">
+
+                                <AutoCompleteTextView
+                                    android:id="@+id/sp_proficiency_level"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:inputType="none"
+                                    android:textColor="@color/color_text_primary"
+                                    android:importantForAutofill="no"
+                                    style="@style/TextAppearance_AiCareer_Body_Medium" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="Years of Experience"
+                                android:layout_marginBottom="16dp"
+                                style="@style/Widget.AiCareer.TextInputLayout"
+                                app:startIconDrawable="@drawable/ic_calendar"
+                                app:startIconTint="@color/color_text_secondary">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/et_years_experience"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/color_text_primary"
+                                    android:inputType="numberDecimal"
+                                    android:importantForAutofill="no"
+                                    style="@style/TextAppearance_AiCareer_Body_Medium"
+                                    android:singleLine="true" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                        </LinearLayout>
+
+                        <!-- STEP 3 CONTAINER: Source & Confirm -->
+                        <LinearLayout
+                            android:id="@+id/ll_step_3_container"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:visibility="gone">
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/til_source"
+                                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="24dp"
+                                android:hint="Skill Acquisition Source"
+                                app:boxBackgroundColor="@color/color_surface_2"
+                                app:boxStrokeColor="@color/color_border"
+                                app:boxCornerRadiusTopStart="14dp"
+                                app:boxCornerRadiusTopEnd="14dp"
+                                app:boxCornerRadiusBottomStart="14dp"
+                                app:boxCornerRadiusBottomEnd="14dp"
+                                app:startIconDrawable="@drawable/ic_info"
+                                app:startIconTint="@color/color_text_secondary">
+
+                                <AutoCompleteTextView
+                                    android:id="@+id/sp_skill_source"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:inputType="none"
+                                    android:textColor="@color/color_text_primary"
+                                    android:importantForAutofill="no"
+                                    style="@style/TextAppearance_AiCareer_Body_Medium" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.materialswitch.MaterialSwitch
+                                android:id="@+id/sw_confirm_declaration"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="I hereby declare this competency represents my current skillset."
+                                android:textColor="@color/color_text_primary"
+                                style="@style/TextAppearance_AiCareer_Body_Small" />
+
+                        </LinearLayout>
+                    </FrameLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Navigation Controls -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="24dp"
+                    app:layout_constraintTop_toBottomOf="@id/card_form">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_prev"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="52dp"
+                        android:layout_weight="1"
+                        android:text="Previous"
+                        android:textColor="@color/color_text_secondary"
+                        app:strokeColor="@color/color_border"
+                        app:cornerRadius="26dp"
+                        android:layout_marginEnd="12dp"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_next_save"
+                        android:layout_width="0dp"
+                        android:layout_height="52dp"
+                        android:layout_weight="2"
+                        android:text="Next Step"
+                        android:textColor="@color/color_on_primary"
+                        app:cornerRadius="26dp"
+                        android:backgroundTint="@color/color_primary" />
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+    </FrameLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

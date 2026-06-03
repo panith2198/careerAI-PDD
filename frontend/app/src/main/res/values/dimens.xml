@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- SPACING SCALE (Multiples of 4dp) -->
+    <dimen name="space_0">0dp</dimen>
+    <dimen name="space_1">4dp</dimen>
+    <dimen name="space_2">8dp</dimen>
+    <dimen name="space_3">12dp</dimen>
+    <dimen name="space_4">16dp</dimen>
+    <dimen name="space_5">20dp</dimen>
+    <dimen name="space_6">24dp</dimen>
+    <dimen name="space_8">32dp</dimen>
+    <dimen name="space_10">40dp</dimen>
+    <dimen name="space_12">48dp</dimen>
+    <dimen name="space_16">64dp</dimen>
+    <dimen name="space_20">80dp</dimen>
+
+    <!-- SCREEN MARGINS -->
+    <dimen name="screen_margin_horizontal">20dp</dimen>
+    <dimen name="screen_margin_vertical">16dp</dimen>
+
+    <!-- COMPONENT SIZES -->
+    <dimen name="toolbar_height">60dp</dimen>
+    <dimen name="bottom_nav_height">72dp</dimen>      <!-- Premium feeling height -->
+    <dimen name="bottom_nav_indicator_height">3dp</dimen>
+
+    <!-- CARD SPECS -->
+    <dimen name="card_corner_radius_small">10dp</dimen>
+    <dimen name="card_corner_radius_medium">16dp</dimen>
+    <dimen name="card_corner_radius_large">24dp</dimen>
+    <dimen name="card_corner_radius_xlarge">32dp</dimen>
+    <dimen name="card_corner_radius_pill">100dp</dimen>
+    <dimen name="card_elevation_resting">0dp</dimen>   <!-- Violet border/stroke instead of raw elevation in dark mode -->
+    <dimen name="card_elevation_raised">8dp</dimen>
+
+    <!-- AVATAR SIZES -->
+    <dimen name="avatar_xs">24dp</dimen>
+    <dimen name="avatar_sm">32dp</dimen>
+    <dimen name="avatar_md">48dp</dimen>
+    <dimen name="avatar_lg">72dp</dimen>
+    <dimen name="avatar_xl">96dp</dimen>
+    <dimen name="avatar_xxl">120dp</dimen>
+
+    <!-- ICON SIZES -->
+    <dimen name="icon_sm">16dp</dimen>
+    <dimen name="icon_md">20dp</dimen>
+    <dimen name="icon_lg">24dp</dimen>
+    <dimen name="icon_xl">32dp</dimen>
+
+    <!-- TOUCH TARGET MINIMUM -->
+    <dimen name="touch_target_min">48dp</dimen>
+
+    <!-- BADGES -->
+    <dimen name="badge_dot_size">8dp</dimen>
+    <dimen name="badge_pill_height">20dp</dimen>
+    <dimen name="badge_pill_min_width">20dp</dimen>
+
+    <!-- CHARTS -->
+    <dimen name="chart_height_mini">80dp</dimen>
+    <dimen name="chart_height_small">140dp</dimen>
+    <dimen name="chart_height_medium">220dp</dimen>
+    <dimen name="chart_height_large">300dp</dimen>
+
+    <!-- HORIZONTAL SCROLL ITEM WIDTHS -->
+    <dimen name="hscroll_card_width_sm">160dp</dimen>
+    <dimen name="hscroll_card_width_md">240dp</dimen>
+    <dimen name="hscroll_card_width_lg">300dp</dimen>
+    <dimen name="hscroll_peek_amount">24dp</dimen>
+
+    <!-- BOTTOM SHEET -->
+    <dimen name="bottom_sheet_corner_radius">28dp</dimen>
+    <dimen name="bottom_sheet_drag_handle_width">36dp</dimen>
+    <dimen name="bottom_sheet_drag_handle_height">4dp</dimen>
+
+    <!-- FIT SCORE RING -->
+    <dimen name="fit_score_ring_size_sm">48dp</dimen>
+    <dimen name="fit_score_ring_size_md">72dp</dimen>
+    <dimen name="fit_score_ring_size_lg">120dp</dimen>
+    <dimen name="fit_score_ring_stroke_width">6dp</dimen>
+
+    <!-- PROGRESS BAR -->
+    <dimen name="progress_height_thin">3dp</dimen>
+    <dimen name="progress_height_medium">6dp</dimen>
+    <dimen name="progress_height_thick">10dp</dimen>
+</resources>

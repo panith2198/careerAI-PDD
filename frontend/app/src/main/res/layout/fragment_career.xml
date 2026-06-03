@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_auth_gradient"
+    android:paddingTop="20dp">
+
+    <!-- Mountain Path Overlay Backdrop on the Right -->
+    <ImageView
+        android:id="@+id/iv_header_backdrop"
+        android:layout_width="160dp"
+        android:layout_height="100dp"
+        android:src="@drawable/ic_roadmap_mountain"
+        android:alpha="0.25"
+        android:scaleType="centerCrop"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Career Hub"
+        style="@style/TextAppearance_AiCareer_Headline_Large"
+        android:textColor="@color/color_text_primary"
+        android:textStyle="bold"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="12dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/ib_search" />
+
+    <!-- Subtitle -->
+    <TextView
+        android:id="@+id/tv_desc"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Explore premium technology careers\nand find your fit."
+        style="@style/TextAppearance_AiCareer_Body_Medium"
+        android:textColor="@color/color_text_secondary"
+        android:layout_marginTop="6dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="12dp"
+        app:layout_constraintTop_toBottomOf="@id/tv_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/ib_search" />
+
+    <!-- Search Button (Glass Circle/Pill) -->
+    <FrameLayout
+        android:id="@+id/ib_search"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:background="@drawable/bg_icon_button_glass"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_search"
+            app:tint="@color/color_text_primary" />
+    </FrameLayout>
+
+    <!-- Expandable Search Input Field -->
+    <EditText
+        android:id="@+id/et_search"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_button_glass"
+        android:hint="Search career roles..."
+        android:textColorHint="@color/color_text_tertiary"
+        android:textColor="@color/color_text_primary"
+        android:textSize="14sp"
+        android:paddingHorizontal="16dp"
+        android:singleLine="true"
+        android:imeOptions="actionSearch"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@id/tv_desc"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Careers List -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_careers"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:clipToPadding="false"
+        android:paddingBottom="80dp"
+        app:layout_constraintTop_toBottomOf="@id/et_search"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

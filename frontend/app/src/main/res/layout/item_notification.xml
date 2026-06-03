@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Notification item per design.md Section 24.15:
+     [Category icon 40dp, tinted bg circle] Title (bold if unread) + Message preview (1 line) + time ago
+     Unread: color_surface_2 bg, left border color_primary 2dp
+     Read: color_surface_1 bg -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="3dp">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_notification"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/color_surface_1"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/color_border"
+        app:cardCornerRadius="14dp"
+        app:cardElevation="0dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingVertical="14dp"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp">
+
+            <!-- Category icon circle (40dp, tinted bg) -->
+            <FrameLayout
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="12dp">
+
+                <View
+                    android:id="@+id/v_icon_bg"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp" />
+
+                <ImageView
+                    android:id="@+id/iv_category_icon"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_chat"
+                    android:contentDescription="Notification category" />
+            </FrameLayout>
+
+            <!-- Text content -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <!-- Unread dot indicator -->
+                    <View
+                        android:id="@+id/v_unread_dot"
+                        android:layout_width="8dp"
+                        android:layout_height="8dp"
+                        android:layout_marginEnd="6dp"
+                        android:background="@drawable/bg_pulse_dot_cyan"
+                        android:backgroundTint="@color/color_primary_bright"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/tv_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Notification Title"
+                        style="@style/TextAppearance_AiCareer_Title_Small"
+                        android:textColor="@color/color_text_primary"
+                        android:maxLines="1"
+                        android:ellipsize="end" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_message"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Notification message preview"
+                    style="@style/TextAppearance_AiCareer_Body_Small"
+                    android:textColor="@color/color_text_secondary"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:layout_marginTop="2dp" />
+            </LinearLayout>
+
+            <!-- Time ago & Right Chevron -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginStart="8dp">
+
+                <TextView
+                    android:id="@+id/tv_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2h"
+                    style="@style/TextAppearance_AiCareer_Label_Small"
+                    android:textColor="@color/color_text_tertiary" />
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginStart="4dp"
+                    android:src="@drawable/ic_arrow_right"
+                    app:tint="@color/color_text_tertiary" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+</FrameLayout>

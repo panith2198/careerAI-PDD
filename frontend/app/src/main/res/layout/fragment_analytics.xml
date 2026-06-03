@@ -1,0 +1,524 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/color_background">
+
+    <!-- Static Toolbar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="20dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="8dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="My Progress"
+            style="@style/TextAppearance_AiCareer_Headline_Large"
+            android:textColor="@color/color_text_primary" />
+
+        <ImageView
+            android:id="@+id/btn_export"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="8dp"
+            android:background="@drawable/bg_icon_button_glass"
+            android:src="@drawable/ic_export"
+            app:tint="@color/color_text_secondary"
+            android:contentDescription="Export" />
+    </LinearLayout>
+
+    <!-- Date Range Picker -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        android:paddingHorizontal="20dp"
+        android:layout_marginBottom="8dp">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/cg_date_range"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:singleLine="true"
+            app:singleSelection="true"
+            app:chipSpacingHorizontal="8dp">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_7d"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="7d"
+                android:textColor="@color/color_text_secondary"
+                app:chipBackgroundColor="@color/color_surface_3"
+                app:chipCornerRadius="100dp"
+                app:chipStrokeColor="@color/color_border"
+                app:chipStrokeWidth="1dp" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_30d"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="30d"
+                android:textColor="@color/color_on_primary"
+                app:chipBackgroundColor="@color/color_primary"
+                app:chipCornerRadius="100dp"
+                app:chipStrokeWidth="0dp"
+                android:checked="true" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_90d"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="90d"
+                android:textColor="@color/color_text_secondary"
+                app:chipBackgroundColor="@color/color_surface_3"
+                app:chipCornerRadius="100dp"
+                app:chipStrokeColor="@color/color_border"
+                app:chipStrokeWidth="1dp" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="All"
+                android:textColor="@color/color_text_secondary"
+                app:chipBackgroundColor="@color/color_surface_3"
+                app:chipCornerRadius="100dp"
+                app:chipStrokeColor="@color/color_border"
+                app:chipStrokeWidth="1dp" />
+
+        </com.google.android.material.chip.ChipGroup>
+    </HorizontalScrollView>
+
+    <!-- Tab Layout -->
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_surface_1"
+        app:tabMode="fixed"
+        app:tabGravity="fill"
+        app:tabTextColor="@color/color_text_tertiary"
+        app:tabSelectedTextColor="@color/color_primary_bright"
+        app:tabIndicatorColor="@color/color_primary_bright"
+        app:tabIndicatorHeight="3dp"
+        app:tabRippleColor="@color/color_ripple_primary" />
+
+    <!-- Content ScrollView -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="20dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="80dp">
+
+            <!-- ===== OVERVIEW TAB CONTENT ===== -->
+            <LinearLayout
+                android:id="@+id/ll_overview_tab"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Career Fit Trend LineChart -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="@color/color_surface_2"
+                    app:strokeColor="@color/color_border"
+                    app:strokeWidth="1dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    android:layout_marginBottom="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="CAREER FIT TREND"
+                            style="@style/TextAppearance_AiCareer_Label_Small"
+                            android:textColor="@color/color_primary_bright"
+                            android:layout_marginBottom="4dp" />
+
+                        <TextView
+                            android:id="@+id/tv_fit_score_current"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="85%"
+                            style="@style/TextAppearance_AiCareer_Mono_Large"
+                            android:textColor="@color/color_text_primary"
+                            android:layout_marginBottom="8dp" />
+
+                        <com.github.mikephil.charting.charts.LineChart
+                            android:id="@+id/chart_career_fit"
+                            android:layout_width="match_parent"
+                            android:layout_height="200dp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Assessment Score BarChart -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="@color/color_surface_2"
+                    app:strokeColor="@color/color_border"
+                    app:strokeWidth="1dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    android:layout_marginBottom="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="ASSESSMENT SCORES"
+                            style="@style/TextAppearance_AiCareer_Label_Small"
+                            android:textColor="@color/color_cyan"
+                            android:layout_marginBottom="12dp" />
+
+                        <com.github.mikephil.charting.charts.BarChart
+                            android:id="@+id/chart_assessments"
+                            android:layout_width="match_parent"
+                            android:layout_height="140dp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Roadmap Completion Row -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="@color/color_surface_2"
+                    app:strokeColor="@color/color_border"
+                    app:strokeWidth="1dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    android:layout_marginBottom="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="ROADMAP COMPLETION"
+                            style="@style/TextAppearance_AiCareer_Label_Small"
+                            android:textColor="@color/color_emerald"
+                            android:layout_marginBottom="12dp" />
+
+                        <LinearLayout
+                            android:id="@+id/ll_roadmap_rings"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <!-- ===== SKILLS TAB CONTENT ===== -->
+            <LinearLayout
+                android:id="@+id/ll_skills_tab"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <!-- Skill Selector HScroll Chips -->
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none"
+                    android:layout_marginBottom="16dp">
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/cg_skill_selector"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:singleLine="true"
+                        app:chipSpacingHorizontal="8dp" />
+                </HorizontalScrollView>
+
+                <!-- Skill Trend LineChart -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="@color/color_surface_2"
+                    app:strokeColor="@color/color_border"
+                    app:strokeWidth="1dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    android:layout_marginBottom="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:id="@+id/tv_skill_trend_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="KOTLIN PROGRESS"
+                            style="@style/TextAppearance_AiCareer_Label_Small"
+                            android:textColor="@color/color_primary_bright"
+                            android:layout_marginBottom="12dp" />
+
+                        <com.github.mikephil.charting.charts.LineChart
+                            android:id="@+id/chart_skill_trend"
+                            android:layout_width="match_parent"
+                            android:layout_height="200dp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center"
+                            android:layout_marginTop="8dp">
+
+                            <View
+                                android:layout_width="20dp"
+                                android:layout_height="3dp"
+                                android:background="@color/color_primary_bright" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="  You  "
+                                style="@style/TextAppearance_AiCareer_Body_Small"
+                                android:textColor="@color/color_text_secondary" />
+
+                            <View
+                                android:layout_width="20dp"
+                                android:layout_height="2dp"
+                                android:background="@color/color_text_tertiary" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="  Cohort Avg"
+                                style="@style/TextAppearance_AiCareer_Body_Small"
+                                android:textColor="@color/color_text_tertiary" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Skill Progress Bars -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="@color/color_surface_2"
+                    app:strokeColor="@color/color_border"
+                    app:strokeWidth="1dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="ALL SKILLS OVERVIEW"
+                            style="@style/TextAppearance_AiCareer_Label_Small"
+                            android:textColor="@color/color_text_tertiary"
+                            android:layout_marginBottom="12dp" />
+
+                        <LinearLayout
+                            android:id="@+id/ll_skill_bars"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <!-- ===== JOBS TAB CONTENT ===== -->
+            <LinearLayout
+                android:id="@+id/ll_jobs_tab"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <!-- Jobs Stats Summary Cards -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="16dp"
+                    android:baselineAligned="false">
+
+                    <!-- Applications Sent -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="8dp"
+                        app:cardBackgroundColor="@color/color_surface_2"
+                        app:strokeColor="@color/color_border"
+                        app:strokeWidth="1dp"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="0dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="16dp"
+                            android:gravity="center">
+
+                            <TextView
+                                android:id="@+id/tv_apps_sent"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="12"
+                                style="@style/TextAppearance_AiCareer_Mono_Large"
+                                android:textColor="@color/color_primary_bright" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Applied"
+                                style="@style/TextAppearance_AiCareer_Label_Small"
+                                android:textColor="@color/color_text_tertiary" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Interviews -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginHorizontal="4dp"
+                        app:cardBackgroundColor="@color/color_surface_2"
+                        app:strokeColor="@color/color_border"
+                        app:strokeWidth="1dp"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="0dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="16dp"
+                            android:gravity="center">
+
+                            <TextView
+                                android:id="@+id/tv_interviews"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="4"
+                                style="@style/TextAppearance_AiCareer_Mono_Large"
+                                android:textColor="@color/color_cyan" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Interviews"
+                                style="@style/TextAppearance_AiCareer_Label_Small"
+                                android:textColor="@color/color_text_tertiary" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Saved Jobs -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="8dp"
+                        app:cardBackgroundColor="@color/color_surface_2"
+                        app:strokeColor="@color/color_border"
+                        app:strokeWidth="1dp"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="0dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="16dp"
+                            android:gravity="center">
+
+                            <TextView
+                                android:id="@+id/tv_saved_jobs"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="28"
+                                style="@style/TextAppearance_AiCareer_Mono_Large"
+                                android:textColor="@color/color_gold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Saved"
+                                style="@style/TextAppearance_AiCareer_Label_Small"
+                                android:textColor="@color/color_text_tertiary" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
+
+                <!-- Job match trend placeholder -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="@color/color_surface_2"
+                    app:strokeColor="@color/color_border"
+                    app:strokeWidth="1dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="AI MATCH SCORE TREND"
+                            style="@style/TextAppearance_AiCareer_Label_Small"
+                            android:textColor="@color/color_emerald"
+                            android:layout_marginBottom="12dp" />
+
+                        <com.github.mikephil.charting.charts.LineChart
+                            android:id="@+id/chart_job_trend"
+                            android:layout_width="match_parent"
+                            android:layout_height="160dp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

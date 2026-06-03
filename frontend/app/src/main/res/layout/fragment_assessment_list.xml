@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_dark_space_gradient">
+
+    <!-- ═══════════════════════════════════════════════════
+         HEADER SECTION — Title, Desc & Clipboard Illustration
+         ═══════════════════════════════════════════════════ -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- Title & Subtitle column -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/iv_header_illustration"
+            android:layout_marginEnd="16dp">
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Skill Assessments"
+                style="@style/TextAppearance_AiCareer_Headline_Large"
+                android:textColor="#FFFFFF"
+                android:textSize="28sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Evaluate your skills, generate gap analysis, and receive tailored roadmaps."
+                style="@style/TextAppearance_AiCareer_Body_Medium"
+                android:textColor="#9D99B8"
+                android:textSize="14sp"
+                android:layout_marginTop="8dp"
+                android:lineSpacingExtra="3dp" />
+        </LinearLayout>
+
+        <!-- Premium Clipboard Target Illustration on Right -->
+        <ImageView
+            android:id="@+id/iv_header_illustration"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:src="@drawable/ic_assessment_header"
+            android:contentDescription="Assessments Illustration"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- ═══════════════════════════════════════════════════
+         FILTER CHIPS SECTION — Categories Scroll list
+         ═══════════════════════════════════════════════════ -->
+    <HorizontalScrollView
+        android:id="@+id/scroll_filters"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        android:paddingHorizontal="20dp"
+        android:clipToPadding="false"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/layout_header">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/cg_filters"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:singleSelection="true"
+            app:selectionRequired="true"
+            app:chipSpacing="10dp">
+
+            <!-- All Tests Chip -->
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_all"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="All Tests"
+                android:checked="true"
+                android:textColor="#FFFFFF"
+                app:chipStrokeColor="#7C3AED"
+                app:chipStrokeWidth="1.5dp"
+                app:chipIcon="@drawable/ic_check"
+                app:chipIconTint="@color/color_cyan"
+                app:chipBackgroundColor="#1A7C3AED" />
+
+            <!-- Kotlin Chip -->
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_kotlin"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Kotlin"
+                android:textColor="#9D99B8"
+                app:chipStrokeColor="#1E1E32"
+                app:chipStrokeWidth="1dp"
+                app:chipIcon="@drawable/ic_kotlin"
+                app:chipIconTint="#9D99B8"
+                app:chipBackgroundColor="#0C0C24" />
+
+            <!-- Architecture Chip -->
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_architecture"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Architecture"
+                android:textColor="#9D99B8"
+                app:chipStrokeColor="#1E1E32"
+                app:chipStrokeWidth="1dp"
+                app:chipIcon="@drawable/ic_grid"
+                app:chipIconTint="#9D99B8"
+                app:chipBackgroundColor="#0C0C24" />
+        </com.google.android.material.chip.ChipGroup>
+    </HorizontalScrollView>
+
+    <!-- ═══════════════════════════════════════════════════
+         RECYCLER VIEW — Lists assessments
+         ═══════════════════════════════════════════════════ -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_assessments"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="12dp"
+        android:paddingBottom="24dp"
+        android:clipToPadding="false"
+        app:layout_constraintTop_toBottomOf="@id/scroll_filters"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <!-- Empty State View -->
+    <TextView
+        android:id="@+id/tv_empty_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No assessments available matching criteria."
+        style="@style/TextAppearance_AiCareer_Body_Medium"
+        android:textColor="#9D99B8"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

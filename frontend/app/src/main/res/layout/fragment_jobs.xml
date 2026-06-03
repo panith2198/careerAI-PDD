@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_jobs_screen">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        app:elevation="0dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="24dp"
+            android:paddingTop="30dp"
+            android:paddingEnd="24dp"
+            android:paddingBottom="20dp">
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif"
+                android:text="Jobs Hub"
+                android:textColor="#FAF9FF"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:fontFamily="sans-serif"
+                android:text="AI-Matched Career Positions"
+                android:textColor="#9D99B8"
+                android:textSize="15sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_title" />
+
+            <ImageView
+                android:id="@+id/iv_jobs_hero"
+                android:layout_width="146dp"
+                android:layout_height="126dp"
+                android:layout_marginTop="-12dp"
+                android:contentDescription="@null"
+                android:src="@drawable/ic_jobs_hero_briefcase"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_search"
+                android:layout_width="0dp"
+                android:layout_height="58dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="12dp"
+                android:hint="Search careers, skills..."
+                app:boxBackgroundColor="#B30D0C1C"
+                app:boxCornerRadiusBottomEnd="29dp"
+                app:boxCornerRadiusBottomStart="29dp"
+                app:boxCornerRadiusTopEnd="29dp"
+                app:boxCornerRadiusTopStart="29dp"
+                app:boxStrokeColor="#A855F7"
+                app:boxStrokeWidth="1dp"
+                app:boxStrokeWidthFocused="2dp"
+                app:hintTextColor="#9D99B8"
+                app:layout_constraintEnd_toStartOf="@id/btn_filter"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_subtitle"
+                app:startIconDrawable="@drawable/ic_search"
+                app:startIconTint="#A855F7">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="sans-serif"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:textColor="#F1EEFF"
+                    android:textColorHint="#9D99B8"
+                    android:textSize="15sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_filter"
+                style="@style/Widget.Material3.Button.IconButton"
+                android:layout_width="58dp"
+                android:layout_height="58dp"
+                android:layout_marginTop="30dp"
+                android:backgroundTint="#402E1065"
+                app:cornerRadius="16dp"
+                app:icon="@drawable/ic_home"
+                app:iconSize="25dp"
+                app:iconTint="#A855F7"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_subtitle"
+                app:strokeColor="#668B5CF6"
+                app:strokeWidth="1dp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="#CC070714"
+            app:tabGravity="fill"
+            app:tabIndicatorColor="#A855F7"
+            app:tabIndicatorFullWidth="false"
+            app:tabIndicatorHeight="3dp"
+            app:tabMode="fixed"
+            app:tabSelectedTextColor="#A855F7"
+            app:tabTextAppearance="@style/TextAppearance_AiCareer_JobsTab"
+            app:tabTextColor="#9D99B8" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

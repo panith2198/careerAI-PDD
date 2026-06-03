@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    AI Smart Career Navigator — Light Theme Color Tokens
+    Design System v2.0 | "Deep Space Intelligence"
+    Palette: Violet + Lavender-White + Slate axis ONLY
+    ⚠ NO yellow · NO amber · NO gold anywhere in this file
+    Usage: place in res/values/colors.xml
+    Night override: res/values-night/colors.xml (dark theme file)
+-->
+<resources>
+
+    <!-- ═══════════════════════════════════════════════════════
+         BASE SURFACES
+         Soft violet-white layering — four distinct tints.
+         Elevation is communicated through deeper lavender tones.
+         ═══════════════════════════════════════════════════════ -->
+
+    <!-- Soft lavender base — screen background -->
+    <color name="color_background">#F4F0FF</color>
+
+    <!-- Pure white — toolbar, bottom nav, app bar -->
+    <color name="color_surface_1">#FFFFFF</color>
+
+    <!-- Barely-tinted white — default card surface -->
+    <color name="color_surface_2">#F8F5FF</color>
+
+    <!-- Soft lavender — elevated card, bottom sheet -->
+    <color name="color_surface_3">#F0EBFF</color>
+
+    <!-- Medium lavender — highest elevation, dropdowns -->
+    <color name="color_surface_4">#E8E0FF</color>
+
+    <!-- 5% black glass overlay — glassmorphism cards -->
+    <color name="color_surface_glass">#0D000000</color>
+
+    <!-- 9% black glass overlay — stronger glass treatment -->
+    <color name="color_surface_glass_strong">#18000000</color>
+
+
+    <!-- ═══════════════════════════════════════════════════════
+         VIOLET BRAND PALETTE
+         Slightly richer values for legibility on light surfaces.
+         ═══════════════════════════════════════════════════════ -->
+
+    <!-- Core violet — primary brand color (richer on light) -->
+    <color name="color_primary">#6D28D9</color>
+
+    <!-- Active / hover / selected violet -->
+    <color name="color_primary_bright">#7C3AED</color>
+
+    <!-- Emphasis violet — score highlights, glow equivalents -->
+    <color name="color_primary_glow">#8B5CF6</color>
+
+    <!-- Deep violet — pressed state, muted variant -->
+    <color name="color_primary_muted">#4C1D95</color>
+
+    <!-- 12% violet tint — chip/badge backgrounds -->
+    <color name="color_primary_dim">#206D28D9</color>
+
+    <!-- 18% violet tint — stronger tinted backgrounds -->
+    <color name="color_primary_dim_strong">#2E7C3AED</color>
+
+    <!-- Light violet container — section backgrounds -->
+    <color name="color_primary_container">#EDE9FE</color>
+
+    <!-- Text on violet/primary surfaces -->
+    <color name="color_on_primary">#FFFFFF</color>
+
+
+    <!-- ═══════════════════════════════════════════════════════
+         CYAN ACCENT
+         Reserved EXCLUSIVELY for AI features and live status.
+         Light-theme adjusted for sufficient contrast on white.
+         ═══════════════════════════════════════════════════════ -->
+
+    <!-- AI streaming, live indicator — light-friendly value -->
+    <color name="color_cyan">#0891B2</color>
+
+    <!-- 12% cyan — AI message bubble background -->
+    <color name="color_cyan_dim">#1F0891B2</color>
+
+    <!-- Cyan card border — AI response cards -->
+    <color name="color_cyan_border">#330891B2</color>
+
+
+    <!-- ═══════════════════════════════════════════════════════
+         SEMANTIC STATUS COLORS
+         Same semantic values — contrast-checked for light bg.
+         ═══════════════════════════════════════════════════════ -->
+
+    <!-- Success — rich green for light backgrounds -->
+    <color name="color_emerald">#059669</color>
+    <color name="color_emerald_dim">#18059669</color>
+
+    <!-- Error / Danger — rich rose for light backgrounds -->
+    <color name="color_rose">#E11D48</color>
+    <color name="color_rose_dim">#18E11D48</color>
+
+    <!-- Warning — mid-violet (NOT amber or yellow) -->
+    <color name="color_violet_warning">#7C3AED</color>
+    <color name="color_violet_warning_dim">#1A7C3AED</color>
+
+    <!-- Semantic aliases -->
+    <color name="color_success">#059669</color>
+    <color name="color_success_bg">#18059669</color>
+    <color name="color_warning">#7C3AED</color>
+    <color name="color_warning_bg">#1A7C3AED</color>
+    <color name="color_error">#E11D48</color>
+    <color name="color_error_bg">#18E11D48</color>
+    <color name="color_info">#0891B2</color>
+    <color name="color_info_bg">#180891B2</color>
+
+    <!-- Legacy aliases — remapped to monochrome system -->
+    <!-- color_amber was #F59E0B — remapped to violet warning -->
+    <color name="color_amber">#7C3AED</color>
+    <color name="color_amber_dim">#1A7C3AED</color>
+    <!-- color_gold was #F59E0B — remapped to bright violet -->
+    <color name="color_gold">#7C3AED</color>
+    <color name="color_gold_dim">#1A7C3AED</color>
+    <!-- Indigo — analytics, secondary data -->
+    <color name="color_indigo">#4F46E5</color>
+
+
+    <!-- ═══════════════════════════════════════════════════════
+         TEXT COLORS
+         Deep violet-tinted greys — optimised for light surfaces.
+         All WCAG AA compliant (≥4.5:1 on white).
+         ═══════════════════════════════════════════════════════ -->
+
+    <!-- Primary text — near-black with violet undertone -->
+    <color name="color_text_primary">#0A0818</color>
+
+    <!-- Secondary text — muted violet-grey, metadata -->
+    <color name="color_text_secondary">#4A4768</color>
+
+    <!-- Tertiary text — placeholder, disabled, hint -->
+    <color name="color_text_tertiary">#7C79A2</color>
+
+    <!-- Inverse text — for dark/violet surfaces -->
+    <color name="color_text_inverse">#F4F0FF</color>
+
+    <!-- Violet callout text — links, highlights, annotations -->
+    <color name="color_text_violet">#6D28D9</color>
+
+
+    <!-- ═══════════════════════════════════════════════════════
+         BORDER & DIVIDER TOKENS
+         Alpha-black for light surfaces — mirrors dark alpha-white.
+         ═══════════════════════════════════════════════════════ -->
+
+    <!-- 8% black — default card border, input outline -->
+    <color name="color_border">#1A000000</color>
+
+    <!-- 14% black — medium emphasis border -->
+    <color name="color_border_medium">#24000000</color>
+
+    <!-- 20% black — high emphasis border, focused card -->
+    <color name="color_border_strong">#33000000</color>
+
+    <!-- Violet-tinted border — focused input, active card -->
+    <color name="color_border_violet">#306D28D9</color>
+
+    <!-- Ultra-subtle section divider line -->
+    <color name="color_divider">#0A000000</color>
+
+
+    <!-- ═══════════════════════════════════════════════════════
+         SPECIAL TOKENS
+         ═══════════════════════════════════════════════════════ -->
+
+    <!-- Dialog / bottom sheet scrim, 60% black -->
+    <color name="color_overlay_scrim">#99000000</color>
+
+    <!-- Violet shadow — subtle for light mode -->
+    <color name="color_shadow_violet">#306D28D9</color>
+
+    <!-- Ripple on violet/primary surfaces -->
+    <color name="color_ripple_primary">#206D28D9</color>
+
+    <!-- Ripple on white/light card surfaces -->
+    <color name="color_ripple_white">#10000000</color>
+
+
+    <!-- ═══════════════════════════════════════════════════════
+         GRADIENT REFERENCE STOPS
+         Use in GradientDrawable / ShapeDrawable in code.
+         ═══════════════════════════════════════════════════════ -->
+    <!--
+        Primary button gradient  : #6D28D9 → #7C3AED → #8B5CF6  (135°)
+        Glow gradient            : #7C3AED30 → transparent
+        Surface gradient         : #FFFFFF → #F0EBFF
+        Career banner gradient   : #3B1D8A → #1E1060
+        Success gradient         : #D1FAE5 → #059669
+        Error gradient           : #FFE4E6 → #E11D48
+        Roadmap Foundation bar   : #6D28D9 → #7C3AED
+        Roadmap Intermediate bar : #E8E0FF → #6D28D9
+        Roadmap Advanced bar     : #7C3AED → #8B5CF6
+        Timer safe gradient      : #6D28D9 → #0891B2
+        Timer danger gradient    : #7C3AED → #E11D48
+    -->
+
+</resources>

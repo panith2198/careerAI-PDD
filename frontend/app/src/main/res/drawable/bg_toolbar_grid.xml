@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Base solid surface background -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/color_surface_1" />
+        </shape>
+    </item>
+    <!-- Overlay grid lines vector -->
+    <item android:drawable="@drawable/bg_grid" />
+</layer-list>

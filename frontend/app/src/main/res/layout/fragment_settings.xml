@@ -1,0 +1,573 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_auth_gradient"
+    android:importantForAutofill="noExcludeDescendants"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="20dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="40dp">
+
+        <!-- Back + Title Header block with 3D gear illustration -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp">
+
+            <ImageView
+                android:id="@+id/btn_back"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:padding="8dp"
+                android:background="@drawable/bg_icon_button_glass"
+                android:src="@drawable/ic_back"
+                android:contentDescription="Go back"
+                android:importantForAutofill="no"
+                app:tint="@color/color_text_primary"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/ll_title_block"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintTop_toBottomOf="@id/btn_back"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/card_gear_illustration">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Settings"
+                    style="@style/TextAppearance_AiCareer_Display_Medium"
+                    android:textColor="@color/color_text_primary"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Customize your experience"
+                    style="@style/TextAppearance_AiCareer_Body_Medium"
+                    android:textColor="@color/color_text_secondary"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
+
+            <!-- Large glowing cog illustration wrapper on right -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_gear_illustration"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                app:cardCornerRadius="48dp"
+                app:strokeWidth="0dp"
+                android:importantForAutofill="no"
+                app:cardBackgroundColor="@color/color_surface_glass_strong"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <!-- Ambient shadow/glow inside -->
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/bg_gradient_glow"
+                    android:alpha="0.4" />
+
+                <!-- The Gear icon -->
+                <ImageView
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_system_gear"
+                    app:tint="@color/color_primary_bright" />
+            </com.google.android.material.card.MaterialCardView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- ========== SECTION: Appearance ========== -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="APPEARANCE"
+            style="@style/TextAppearance_AiCareer_Label_Small"
+            android:textColor="@color/color_text_tertiary"
+            android:layout_marginBottom="12dp" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:strokeColor="@color/color_border"
+            app:strokeWidth="1dp"
+            app:cardBackgroundColor="@color/color_surface_2"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            android:layout_marginBottom="24dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <!-- Dark Mode Toggle -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:padding="8dp"
+                        android:background="@drawable/bg_icon_button_glass"
+                        android:src="@drawable/ic_theme_toggle"
+                        app:tint="@color/color_primary_bright"
+                        android:importantForAutofill="no"
+                        android:contentDescription="Theme" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="14dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Dark Mode"
+                            style="@style/TextAppearance_AiCareer_Title_Medium"
+                            android:textColor="@color/color_text_primary" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Deep space dark theme"
+                            style="@style/TextAppearance_AiCareer_Body_Small"
+                            android:textColor="@color/color_text_tertiary" />
+                    </LinearLayout>
+
+                    <com.google.android.material.materialswitch.MaterialSwitch
+                        android:id="@+id/switch_theme"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        app:thumbTint="@color/color_primary_bright"
+                        app:trackTint="@color/color_surface_3" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- ========== SECTION: Notifications ========== -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="NOTIFICATIONS"
+            style="@style/TextAppearance_AiCareer_Label_Small"
+            android:textColor="@color/color_text_tertiary"
+            android:layout_marginBottom="12dp" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:strokeColor="@color/color_border"
+            app:strokeWidth="1dp"
+            app:cardBackgroundColor="@color/color_surface_2"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            android:layout_marginBottom="24dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <!-- Job Alerts Toggle -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="16dp">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:padding="8dp"
+                        android:background="@drawable/bg_icon_button_glass"
+                        android:src="@drawable/ic_jobs"
+                        app:tint="@color/color_cyan"
+                        android:importantForAutofill="no"
+                        android:contentDescription="Job Alerts" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="14dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Job Alerts"
+                            style="@style/TextAppearance_AiCareer_Title_Medium"
+                            android:textColor="@color/color_text_primary" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Receive AI-matched job notifications"
+                            style="@style/TextAppearance_AiCareer_Body_Small"
+                            android:textColor="@color/color_text_tertiary" />
+                    </LinearLayout>
+
+                    <com.google.android.material.materialswitch.MaterialSwitch
+                        android:id="@+id/switch_job_alerts"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        app:thumbTint="@color/color_primary_bright"
+                        app:trackTint="@color/color_surface_3" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/color_divider"
+                    android:layout_marginBottom="16dp" />
+
+                <!-- Roadmap Reminders Toggle -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="16dp">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:padding="8dp"
+                        android:background="@drawable/bg_icon_button_glass"
+                        android:src="@drawable/ic_roadmap"
+                        app:tint="@color/color_emerald"
+                        android:importantForAutofill="no"
+                        android:contentDescription="Roadmap Reminders" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="14dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Roadmap Reminders"
+                            style="@style/TextAppearance_AiCareer_Title_Medium"
+                            android:textColor="@color/color_text_primary" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Weekly milestone progress nudges"
+                            style="@style/TextAppearance_AiCareer_Body_Small"
+                            android:textColor="@color/color_text_tertiary" />
+                    </LinearLayout>
+
+                    <com.google.android.material.materialswitch.MaterialSwitch
+                        android:id="@+id/switch_roadmap_reminders"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        app:thumbTint="@color/color_primary_bright"
+                        app:trackTint="@color/color_surface_3" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/color_divider"
+                    android:layout_marginBottom="16dp" />
+
+                <!-- AI Tips Toggle -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:padding="8dp"
+                        android:background="@drawable/bg_icon_button_glass"
+                        android:src="@drawable/ic_chat"
+                        app:tint="@color/color_gold"
+                        android:importantForAutofill="no"
+                        android:contentDescription="AI Tips" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="14dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="AI Career Tips"
+                            style="@style/TextAppearance_AiCareer_Title_Medium"
+                            android:textColor="@color/color_text_primary" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Personalized daily career insights"
+                            style="@style/TextAppearance_AiCareer_Body_Small"
+                            android:textColor="@color/color_text_tertiary" />
+                    </LinearLayout>
+
+                    <com.google.android.material.materialswitch.MaterialSwitch
+                        android:id="@+id/switch_ai_tips"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        app:thumbTint="@color/color_primary_bright"
+                        app:trackTint="@color/color_surface_3" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- ========== SECTION: Account ========== -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ACCOUNT"
+            style="@style/TextAppearance_AiCareer_Label_Small"
+            android:textColor="@color/color_text_tertiary"
+            android:layout_marginBottom="12dp" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:strokeColor="@color/color_border"
+            app:strokeWidth="1dp"
+            app:cardBackgroundColor="@color/color_surface_2"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            android:layout_marginBottom="24dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <!-- Change Password -->
+                <LinearLayout
+                    android:id="@+id/row_change_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:padding="4dp"
+                    android:layout_marginBottom="12dp">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:padding="8dp"
+                        android:background="@drawable/bg_icon_button_glass"
+                        android:src="@drawable/ic_shield"
+                        app:tint="@color/color_text_secondary"
+                        android:importantForAutofill="no"
+                        android:contentDescription="Password" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="14dp"
+                        android:text="Change Password"
+                        style="@style/TextAppearance_AiCareer_Title_Medium"
+                        android:textColor="@color/color_text_primary" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_arrow_right"
+                        app:tint="@color/color_text_tertiary"
+                        android:contentDescription="Navigate" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/color_divider"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- About App -->
+                <LinearLayout
+                    android:id="@+id/row_about"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:padding="4dp">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:padding="8dp"
+                        android:background="@drawable/bg_icon_button_glass"
+                        android:src="@drawable/ic_info"
+                        app:tint="@color/color_text_secondary"
+                        android:importantForAutofill="no"
+                        android:contentDescription="About" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="14dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="About AI Career Navigator"
+                            style="@style/TextAppearance_AiCareer_Title_Medium"
+                            android:textColor="@color/color_text_primary" />
+
+                        <TextView
+                            android:id="@+id/tv_app_version"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Version 2.0.0"
+                            style="@style/TextAppearance_AiCareer_Body_Small"
+                            android:textColor="@color/color_text_tertiary" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_arrow_right"
+                        app:tint="@color/color_text_tertiary"
+                        android:contentDescription="Navigate" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- ========== SECTION: Danger Zone ========== -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="DANGER ZONE"
+            style="@style/TextAppearance_AiCareer_Label_Small"
+            android:textColor="@color/color_rose"
+            android:layout_marginBottom="12dp" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:strokeColor="@color/color_rose_dim"
+            app:strokeWidth="1dp"
+            app:cardBackgroundColor="@color/color_surface_2"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            android:layout_marginBottom="24dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <!-- Delete Account -->
+                <LinearLayout
+                    android:id="@+id/row_delete_account"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:padding="4dp">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:padding="8dp"
+                        android:background="@drawable/bg_icon_button_glass"
+                        android:src="@drawable/ic_delete"
+                        app:tint="@color/color_rose"
+                        android:importantForAutofill="no"
+                        android:contentDescription="Delete account" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="14dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Delete Account"
+                            style="@style/TextAppearance_AiCareer_Title_Medium"
+                            android:textColor="@color/color_rose" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Permanently remove your data"
+                            style="@style/TextAppearance_AiCareer_Body_Small"
+                            android:textColor="@color/color_text_tertiary" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_arrow_right"
+                        app:tint="@color/color_rose"
+                        android:contentDescription="Navigate" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Full-Width Logout Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_logout"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="Log Out"
+            android:textAllCaps="false"
+            android:textColor="@color/color_rose"
+            app:strokeColor="@color/color_rose_dim"
+            app:strokeWidth="1dp"
+            app:cornerRadius="26dp"
+            app:icon="@drawable/ic_logout"
+            app:iconTint="@color/color_rose"
+            app:iconGravity="textStart"
+            android:layout_marginTop="8dp" />
+
+    </LinearLayout>
+</ScrollView>

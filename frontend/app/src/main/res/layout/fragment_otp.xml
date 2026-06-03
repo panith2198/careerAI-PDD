@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_auth_gradient"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="24dp">
+
+        <ImageView
+            android:id="@+id/iv_logo"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_marginTop="48dp"
+            android:src="@drawable/ic_app_logo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Verify Email"
+            style="@style/TextAppearance_AiCareer_Headline_Large"
+            android:textColor="@color/color_text_primary"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_logo" />
+
+        <TextView
+            android:id="@+id/tv_subtitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="We sent a 6-digit code to your email address."
+            style="@style/TextAppearance_AiCareer_Body_Medium"
+            android:textColor="@color/color_text_secondary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_title" />
+
+        <!-- Form Card for unified aesthetic -->
+        <FrameLayout
+             android:id="@+id/card_form"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_marginTop="32dp"
+             android:background="@drawable/bg_card_resting"
+             app:layout_constraintTop_toBottomOf="@id/tv_subtitle"
+             app:layout_constraintEnd_toEndOf="parent"
+             app:layout_constraintStart_toStartOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <!-- 6-digit OTP Box Input Grid -->
+                <LinearLayout
+                    android:id="@+id/layout_otp_grid"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="16dp">
+
+                    <EditText
+                        android:id="@+id/et_otp_1"
+                        android:layout_width="48dp"
+                        android:layout_height="56dp"
+                        android:layout_margin="4dp"
+                        android:gravity="center"
+                        android:inputType="number"
+                        android:maxLength="1"
+                        android:textSize="22sp"
+                        android:textColor="@color/color_text_primary"
+                        android:textStyle="bold"
+                        android:background="@drawable/bg_otp_box" />
+
+                    <EditText
+                        android:id="@+id/et_otp_2"
+                        android:layout_width="48dp"
+                        android:layout_height="56dp"
+                        android:layout_margin="4dp"
+                        android:gravity="center"
+                        android:inputType="number"
+                        android:maxLength="1"
+                        android:textSize="22sp"
+                        android:textColor="@color/color_text_primary"
+                        android:textStyle="bold"
+                        android:background="@drawable/bg_otp_box" />
+
+                    <EditText
+                        android:id="@+id/et_otp_3"
+                        android:layout_width="48dp"
+                        android:layout_height="56dp"
+                        android:layout_margin="4dp"
+                        android:gravity="center"
+                        android:inputType="number"
+                        android:maxLength="1"
+                        android:textSize="22sp"
+                        android:textColor="@color/color_text_primary"
+                        android:textStyle="bold"
+                        android:background="@drawable/bg_otp_box" />
+
+                    <EditText
+                        android:id="@+id/et_otp_4"
+                        android:layout_width="48dp"
+                        android:layout_height="56dp"
+                        android:layout_margin="4dp"
+                        android:gravity="center"
+                        android:inputType="number"
+                        android:maxLength="1"
+                        android:textSize="22sp"
+                        android:textColor="@color/color_text_primary"
+                        android:textStyle="bold"
+                        android:background="@drawable/bg_otp_box" />
+
+                    <EditText
+                        android:id="@+id/et_otp_5"
+                        android:layout_width="48dp"
+                        android:layout_height="56dp"
+                        android:layout_margin="4dp"
+                        android:gravity="center"
+                        android:inputType="number"
+                        android:maxLength="1"
+                        android:textSize="22sp"
+                        android:textColor="@color/color_text_primary"
+                        android:textStyle="bold"
+                        android:background="@drawable/bg_otp_box" />
+
+                    <EditText
+                        android:id="@+id/et_otp_6"
+                        android:layout_width="48dp"
+                        android:layout_height="56dp"
+                        android:layout_margin="4dp"
+                        android:gravity="center"
+                        android:inputType="number"
+                        android:maxLength="1"
+                        android:textSize="22sp"
+                        android:textColor="@color/color_text_primary"
+                        android:textStyle="bold"
+                        android:background="@drawable/bg_otp_box" />
+                </LinearLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_new_password"
+                    style="@style/Widget.AiCareer.TextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:hint="New Password"
+                    android:visibility="gone"
+                    app:passwordToggleEnabled="true"
+                    app:passwordToggleTint="@color/color_text_secondary"
+                    app:startIconDrawable="@drawable/ic_shield"
+                    app:startIconTint="@color/color_text_secondary">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_new_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPassword"
+                        android:textColor="@color/color_text_primary"
+                        style="@style/TextAppearance_AiCareer_Body_Medium" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_confirm_password"
+                    style="@style/Widget.AiCareer.TextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:hint="Confirm New Password"
+                    android:visibility="gone"
+                    app:passwordToggleEnabled="true"
+                    app:passwordToggleTint="@color/color_text_secondary"
+                    app:startIconDrawable="@drawable/ic_shield"
+                    app:startIconTint="@color/color_text_secondary">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_confirm_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPassword"
+                        android:textColor="@color/color_text_primary"
+                        style="@style/TextAppearance_AiCareer_Body_Medium" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_verify"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="24dp"
+                    android:text="Verify &amp; Continue"
+                    android:textAllCaps="false"
+                    android:textColor="@color/color_on_primary"
+                    app:cornerRadius="@dimen/card_corner_radius_small"
+                    android:backgroundTint="@color/color_primary"
+                    style="@style/Widget.Material3.Button" />
+            </LinearLayout>
+        </FrameLayout>
+
+        <!-- Back to Login option -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_back_to_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Back to Login"
+            android:textAllCaps="false"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:textColor="@color/color_primary_bright"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/card_form" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

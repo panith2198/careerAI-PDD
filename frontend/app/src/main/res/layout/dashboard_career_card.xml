@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="250dp"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="14dp"
+    android:layout_marginVertical="8dp"
+    app:cardBackgroundColor="@color/color_surface_2"
+    app:strokeColor="@color/color_border"
+    app:strokeWidth="1dp"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="0dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <!-- Stats Icon Container -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_icon_container"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            app:cardCornerRadius="10dp"
+            app:strokeWidth="0dp"
+            app:cardBackgroundColor="@color/color_primary_dim"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_trend_up"
+                app:tint="@color/color_primary_bright" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Data Analyst"
+            style="@style/TextAppearance_AiCareer_Title_Medium"
+            android:textColor="@color/color_text_primary"
+            android:textStyle="bold"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:layout_marginStart="12dp"
+            app:layout_constraintTop_toTopOf="@id/card_icon_container"
+            app:layout_constraintBottom_toBottomOf="@id/card_icon_container"
+            app:layout_constraintStart_toEndOf="@id/card_icon_container"
+            app:layout_constraintEnd_toStartOf="@id/tv_fit_score" />
+
+        <!-- Fit Badge (Green Pill) -->
+        <TextView
+            android:id="@+id/tv_fit_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="93% FIT"
+            style="@style/TextAppearance_AiCareer_Mono_Small"
+            android:textColor="@color/color_emerald"
+            android:background="@drawable/bg_badge_pill_rose"
+            android:backgroundTint="@color/color_emerald_dim"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="4dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintTop_toTopOf="@id/card_icon_container"
+            app:layout_constraintBottom_toBottomOf="@id/card_icon_container"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Chips Row (cg_skills) -->
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/cg_skills"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:chipSpacingHorizontal="6dp"
+            app:chipSpacingVertical="4dp"
+            app:layout_constraintTop_toBottomOf="@id/card_icon_container"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Divider Line -->
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/color_divider"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@id/cg_skills" />
+
+        <!-- Salary Layout bottom left -->
+        <LinearLayout
+            android:id="@+id/ll_salary"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="14dp"
+            app:layout_constraintTop_toBottomOf="@id/divider"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_explore"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <!-- Wallet Icon -->
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/ic_jobs"
+                app:tint="@color/color_primary_bright" />
+
+            <TextView
+                android:id="@+id/tv_salary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="₹5L - ₹12L/yr"
+                style="@style/TextAppearance_AiCareer_Mono_Small"
+                android:textColor="@color/color_text_primary"
+                android:layout_marginStart="6dp" />
+        </LinearLayout>
+
+        <!-- Explore Link bottom right -->
+        <TextView
+            android:id="@+id/btn_explore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Explore ›"
+            style="@style/TextAppearance_AiCareer_Title_Small"
+            android:textColor="@color/color_primary_bright"
+            android:textStyle="bold"
+            android:layout_marginTop="14dp"
+            app:layout_constraintTop_toBottomOf="@id/divider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

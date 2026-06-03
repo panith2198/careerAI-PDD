@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/auth_nav_graph"
+    app:startDestination="@id/navigation_onboarding">
+
+    <fragment
+        android:id="@+id/navigation_onboarding"
+        android:name="com.aicareer.navigator.ui.auth.OnboardingFragment"
+        android:label="Onboarding"
+        tools:layout="@layout/fragment_onboarding">
+        <action
+            android:id="@+id/action_onboarding_to_login"
+            app:destination="@id/navigation_login"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_login"
+        android:name="com.aicareer.navigator.ui.auth.LoginFragment"
+        android:label="Login"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_login_to_register"
+            app:destination="@id/navigation_register"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_login_to_forgot_password"
+            app:destination="@id/navigation_forgot_password"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_login_to_otp"
+            app:destination="@id/navigation_otp"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_register"
+        android:name="com.aicareer.navigator.ui.auth.RegisterFragment"
+        android:label="Register"
+        tools:layout="@layout/fragment_register">
+        <action
+            android:id="@+id/action_register_to_otp"
+            app:destination="@id/navigation_otp"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_otp"
+        android:name="com.aicareer.navigator.ui.auth.OtpFragment"
+        android:label="OTP Verification"
+        tools:layout="@layout/fragment_otp">
+        <action
+            android:id="@+id/action_otp_to_onboarding"
+            app:destination="@id/navigation_onboarding" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_forgot_password"
+        android:name="com.aicareer.navigator.ui.auth.ForgotPasswordFragment"
+        android:label="Forgot Password"
+        tools:layout="@layout/fragment_forgot_password">
+        <action
+            android:id="@+id/action_forgot_password_to_otp"
+            app:destination="@id/navigation_otp"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+</navigation>

@@ -1,0 +1,583 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_auth_gradient">
+
+    <!-- Top Navigation Toolbar -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_surface_1">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingEnd="16dp">
+
+                <ImageView
+                    android:id="@+id/btn_back"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:padding="8dp"
+                    android:background="@drawable/bg_icon_button_glass"
+                    android:src="@drawable/ic_back"
+                    android:contentDescription="Go back"
+                    app:tint="@color/color_text_primary" />
+
+                <TextView
+                    android:id="@+id/tv_toolbar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:text="Edit Profile"
+                    style="@style/TextAppearance_AiCareer_Title_Large"
+                    android:textColor="@color/color_text_primary"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <!-- Glowing radial backdrop effect top-left -->
+            <View
+                android:id="@+id/view_radial_glow"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:background="@drawable/bg_gradient_glow"
+                android:alpha="0.15"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+
+
+            <!-- Top Step Wizard Progress circles -->
+            <LinearLayout
+                android:id="@+id/ll_step_indicator"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <!-- Circle 1 -->
+                <TextView
+                    android:id="@+id/tv_indicator_step_1"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:text="1"
+                    android:gravity="center"
+                    android:background="@drawable/bg_badge_pill_rose"
+                    android:backgroundTint="@color/color_primary"
+                    android:textColor="@color/color_on_primary"
+                    style="@style/TextAppearance_AiCareer_Mono_Small"
+                    android:textStyle="bold" />
+
+                <View
+                    android:id="@+id/view_line_1"
+                    android:layout_width="60dp"
+                    android:layout_height="2dp"
+                    android:background="@color/color_surface_3"
+                    android:layout_marginHorizontal="8dp" />
+
+                <!-- Circle 2 -->
+                <TextView
+                    android:id="@+id/tv_indicator_step_2"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:text="2"
+                    android:gravity="center"
+                    android:background="@drawable/bg_badge_pill_rose"
+                    android:backgroundTint="@color/color_surface_3"
+                    android:textColor="@color/color_text_secondary"
+                    style="@style/TextAppearance_AiCareer_Mono_Small"
+                    android:textStyle="bold" />
+
+                <View
+                    android:id="@+id/view_line_2"
+                    android:layout_width="60dp"
+                    android:layout_height="2dp"
+                    android:background="@color/color_surface_3"
+                    android:layout_marginHorizontal="8dp" />
+
+                <!-- Circle 3 -->
+                <TextView
+                    android:id="@+id/tv_indicator_step_3"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:text="3"
+                    android:gravity="center"
+                    android:background="@drawable/bg_badge_pill_rose"
+                    android:backgroundTint="@color/color_surface_3"
+                    android:textColor="@color/color_text_secondary"
+                    style="@style/TextAppearance_AiCareer_Mono_Small"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Muted Cohort text -->
+            <TextView
+                android:id="@+id/tv_step_counter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Step 1 of 3"
+                style="@style/TextAppearance_AiCareer_Mono_Small"
+                android:textColor="@color/color_primary_bright"
+                app:layout_constraintTop_toBottomOf="@id/ll_step_indicator"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- Dynamic Form Lighter Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_form"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:strokeColor="@color/color_border"
+                app:strokeWidth="1dp"
+                app:cardBackgroundColor="@color/color_surface_2"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="2dp"
+                app:layout_constraintTop_toBottomOf="@id/tv_step_counter">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <!-- Form Header (Step title details) -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="16dp">
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            app:cardCornerRadius="24dp"
+                            app:cardBackgroundColor="@color/color_primary_muted"
+                            app:strokeWidth="0dp"
+                            android:layout_marginEnd="12dp">
+
+                            <ImageView
+                                android:id="@+id/iv_wizard_header_icon"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_profile"
+                                app:tint="@color/color_primary_bright" />
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tv_wizard_title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Step 1: Identity &amp; Location"
+                                style="@style/TextAppearance_AiCareer_Headline_Medium"
+                                android:textColor="@color/color_text_primary" />
+
+                            <TextView
+                                android:id="@+id/tv_wizard_desc"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Set up your primary identity and preferred location details."
+                                style="@style/TextAppearance_AiCareer_Body_Small"
+                                android:textColor="@color/color_text_secondary"
+                                android:layout_marginTop="2dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- STEP 1 FIELDS (Identity & Location via TextInputLayout to natively bypass yellow highlights) -->
+                    <LinearLayout
+                        android:id="@+id/ll_step_1_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="visible">
+
+                        <!-- Full Name -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/til_name"
+                            style="@style/Widget.AiCareer.TextInputLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="12dp"
+                            android:hint="Full Name"
+                            app:startIconDrawable="@drawable/ic_profile"
+                            app:startIconTint="@color/color_text_secondary">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/et_name"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textPersonName"
+                                android:textColor="@color/color_text_primary"
+                                android:importantForAutofill="no"
+                                style="@style/TextAppearance_AiCareer_Body_Medium" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <!-- Professional Bio -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/til_bio"
+                            style="@style/Widget.AiCareer.TextInputLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="12dp"
+                            android:hint="Professional Bio"
+                            app:startIconDrawable="@drawable/ic_edit"
+                            app:startIconTint="@color/color_text_secondary">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/et_bio"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textShortMessage"
+                                android:textColor="@color/color_text_primary"
+                                android:importantForAutofill="no"
+                                style="@style/TextAppearance_AiCareer_Body_Medium" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <!-- Current City -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/til_city"
+                            style="@style/Widget.AiCareer.TextInputLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="12dp"
+                            android:hint="Current City"
+                            app:startIconDrawable="@drawable/ic_location"
+                            app:startIconTint="@color/color_text_secondary">
+
+                            <AutoCompleteTextView
+                                android:id="@+id/actv_city"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textAutoComplete"
+                                android:textColor="@color/color_text_primary"
+                                android:importantForAutofill="no"
+                                style="@style/TextAppearance_AiCareer_Body_Medium" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <!-- Current State -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/til_state"
+                            style="@style/Widget.AiCareer.TextInputLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="12dp"
+                            android:hint="Current State"
+                            app:startIconDrawable="@drawable/ic_state"
+                            app:startIconTint="@color/color_text_secondary">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/et_state"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="text"
+                                android:textColor="@color/color_text_primary"
+                                android:importantForAutofill="no"
+                                style="@style/TextAppearance_AiCareer_Body_Medium" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <!-- Preferred Work Style Mode (Exposed Dropdown Menu) -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/til_work_mode"
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="12dp"
+                            android:hint="Preferred Work Style Mode"
+                            app:boxBackgroundColor="@color/color_surface_2"
+                            app:boxStrokeColor="@color/color_border"
+                            app:boxCornerRadiusTopStart="14dp"
+                            app:boxCornerRadiusTopEnd="14dp"
+                            app:boxCornerRadiusBottomStart="14dp"
+                            app:boxCornerRadiusBottomEnd="14dp"
+                            app:startIconDrawable="@drawable/ic_jobs"
+                            app:startIconTint="@color/color_text_secondary">
+
+                            <AutoCompleteTextView
+                                android:id="@+id/sp_work_mode"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="none"
+                                android:textColor="@color/color_text_primary"
+                                android:importantForAutofill="no"
+                                style="@style/TextAppearance_AiCareer_Body_Medium" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                    </LinearLayout>
+
+                    <!-- STEP 2 FIELDS (Academics) -->
+                    <LinearLayout
+                        android:id="@+id/ll_step_2_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <!-- Highest Education Level (Exposed Dropdown Menu) -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/til_education"
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="12dp"
+                            android:hint="Highest Education Level"
+                            app:boxBackgroundColor="@color/color_surface_2"
+                            app:boxStrokeColor="@color/color_border"
+                            app:boxCornerRadiusTopStart="14dp"
+                            app:boxCornerRadiusTopEnd="14dp"
+                            app:boxCornerRadiusBottomStart="14dp"
+                            app:boxCornerRadiusBottomEnd="14dp"
+                            app:startIconDrawable="@drawable/ic_education"
+                            app:startIconTint="@color/color_text_secondary">
+
+                            <AutoCompleteTextView
+                                android:id="@+id/sp_education_level"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="none"
+                                android:textColor="@color/color_text_primary"
+                                android:importantForAutofill="no"
+                                style="@style/TextAppearance_AiCareer_Body_Medium" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <!-- Field of Study -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/til_field"
+                            style="@style/Widget.AiCareer.TextInputLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="12dp"
+                            android:hint="Field of Study / Specialization"
+                            app:startIconDrawable="@drawable/ic_edit"
+                            app:startIconTint="@color/color_text_secondary">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/et_field_of_study"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="text"
+                                android:textColor="@color/color_text_primary"
+                                android:importantForAutofill="no"
+                                style="@style/TextAppearance_AiCareer_Body_Medium" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <!-- Institution Name -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/til_institution"
+                            style="@style/Widget.AiCareer.TextInputLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="12dp"
+                            android:hint="Institution Name / College"
+                            app:startIconDrawable="@drawable/ic_state"
+                            app:startIconTint="@color/color_text_secondary">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/et_institution_name"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="text"
+                                android:textColor="@color/color_text_primary"
+                                android:importantForAutofill="no"
+                                style="@style/TextAppearance_AiCareer_Body_Medium" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <!-- Graduation Year -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/til_graduation"
+                            style="@style/Widget.AiCareer.TextInputLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="12dp"
+                            android:hint="Graduation Year"
+                            app:startIconDrawable="@drawable/ic_calendar"
+                            app:startIconTint="@color/color_text_secondary">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/et_graduation_year"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="number"
+                                android:textColor="@color/color_text_primary"
+                                android:importantForAutofill="no"
+                                style="@style/TextAppearance_AiCareer_Body_Medium" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                    </LinearLayout>
+
+                    <!-- STEP 3 FIELDS (Preferences & Links) -->
+                    <LinearLayout
+                        android:id="@+id/ll_step_3_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <!-- Expected Salary Min -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/til_salary"
+                            style="@style/Widget.AiCareer.TextInputLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="12dp"
+                            android:hint="Expected Salary Min (LPA)"
+                            app:startIconDrawable="@drawable/ic_trend_up"
+                            app:startIconTint="@color/color_text_secondary">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/et_salary"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="number"
+                                android:textColor="@color/color_text_primary"
+                                android:importantForAutofill="no"
+                                style="@style/TextAppearance_AiCareer_Body_Medium" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <!-- LinkedIn URL -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/til_linkedin"
+                            style="@style/Widget.AiCareer.TextInputLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="12dp"
+                            android:hint="LinkedIn Profile URL"
+                            app:startIconDrawable="@drawable/ic_linkedin"
+                            app:startIconTint="@color/color_text_secondary">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/et_linkedin_url"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textUri"
+                                android:textColor="@color/color_text_primary"
+                                android:importantForAutofill="no"
+                                style="@style/TextAppearance_AiCareer_Body_Medium" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <!-- GitHub URL -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/til_github"
+                            style="@style/Widget.AiCareer.TextInputLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="12dp"
+                            android:hint="GitHub Portfolio URL"
+                            app:startIconDrawable="@drawable/ic_github"
+                            app:startIconTint="@color/color_text_secondary">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/et_github_url"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textUri"
+                                android:textColor="@color/color_text_primary"
+                                android:importantForAutofill="no"
+                                style="@style/TextAppearance_AiCareer_Body_Medium" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                    </LinearLayout>
+
+                    <!-- Info Warning Blue Badge -->
+                    <LinearLayout
+                        android:id="@+id/ll_info_warning"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/bg_button_glass"
+                        android:backgroundTint="@color/color_primary_muted"
+                        android:padding="12dp"
+                        android:layout_marginTop="8dp">
+
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:src="@drawable/ic_info"
+                            app:tint="@color/color_primary_bright"
+                            android:layout_marginEnd="10dp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="You can update these details anytime from your profile settings."
+                            style="@style/TextAppearance_AiCareer_Body_Small"
+                            android:textColor="@color/color_cyan" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Previous and Next button container -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp"
+                app:layout_constraintTop_toBottomOf="@id/card_form">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_prev"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="52dp"
+                    android:layout_weight="1"
+                    android:text="Previous"
+                    android:textColor="@color/color_text_secondary"
+                    app:strokeColor="@color/color_border"
+                    app:cornerRadius="26dp"
+                    android:visibility="gone"
+                    android:layout_marginEnd="12dp"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_next_save"
+                    android:layout_width="0dp"
+                    android:layout_height="54dp"
+                    android:layout_weight="2"
+                    android:text="Next Step"
+                    android:textColor="@color/color_on_primary"
+                    app:cornerRadius="27dp"
+                    app:icon="@drawable/ic_arrow_right"
+                    app:iconGravity="textEnd"
+                    app:iconSize="14dp"
+                    app:iconTint="@color/color_on_primary"
+                    android:backgroundTint="@color/color_primary" />
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

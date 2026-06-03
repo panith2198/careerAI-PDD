@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <gradient android:angle="270" android:centerColor="#080718" android:endColor="#03030B" android:startColor="#080816" />
+        </shape>
+    </item>
+    <item android:drawable="@drawable/bg_grid" />
+</layer-list>

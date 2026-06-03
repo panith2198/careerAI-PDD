@@ -1,0 +1,961 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_auth_gradient">
+
+    <!-- Immersive Header Area -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="24dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/btn_back"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="8dp"
+            android:src="@drawable/ic_back"
+            android:background="@drawable/bg_icon_button_glass"
+            app:tint="@color/color_text_primary"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="My AI Roadmap"
+            style="@style/TextAppearance_AiCareer_Headline_Large"
+            android:textColor="@color/color_text_primary"
+            android:layout_marginTop="12dp"
+            app:layout_constraintTop_toBottomOf="@id/btn_back"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_subtitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Custom career progression path"
+            style="@style/TextAppearance_AiCareer_Body_Small"
+            android:textColor="@color/color_text_secondary"
+            android:layout_marginTop="2dp"
+            app:layout_constraintTop_toBottomOf="@id/tv_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/score_gauge_container" />
+
+        <!-- Circular Overall Progress Gauge -->
+        <FrameLayout
+            android:id="@+id/score_gauge_container"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/pb_overall_track"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                app:indicatorSize="56dp"
+                app:trackThickness="6dp"
+                android:progress="100"
+                app:indicatorColor="@color/color_surface_3"
+                app:trackColor="@android:color/transparent" />
+
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/pb_overall"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                app:indicatorSize="56dp"
+                app:trackThickness="6dp"
+                android:progress="0"
+                app:trackCornerRadius="3dp"
+                app:indicatorColor="@color/color_primary_bright"
+                app:trackColor="@android:color/transparent" />
+
+            <TextView
+                android:id="@+id/tv_overall_pct"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="0%"
+                style="@style/TextAppearance_AiCareer_Mono_Small"
+                android:textColor="@color/color_text_primary" />
+
+        </FrameLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Scrollable Roadmap Content Panel -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nsv_roadmap_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/cl_header"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <!-- Phase 1: Foundation Header & List -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cv_phase_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#4D8B5CF6"
+                app:strokeWidth="1.5dp"
+                app:cardBackgroundColor="@color/color_surface_2"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cl_phase_1_header"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="16dp">
+
+                        <FrameLayout
+                            android:id="@+id/fl_phase_1_icon"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/bg_fit_circle"
+                            android:backgroundTint="#268B5CF6"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent">
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_grid"
+                                app:tint="@color/color_primary_bright" />
+                        </FrameLayout>
+
+                        <TextView
+                            android:id="@+id/tv_phase_1_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="FOUNDATION PHASE"
+                            style="@style/TextAppearance_AiCareer_Title_Medium"
+                            android:textColor="@color/color_text_primary"
+                            android:layout_marginStart="12dp"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/fl_phase_1_icon" />
+
+                        <TextView
+                            android:id="@+id/tv_phase_1_sub"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Weeks 1-4"
+                            style="@style/TextAppearance_AiCareer_Label_Small"
+                            android:textColor="@color/color_text_secondary"
+                            android:layout_marginStart="12dp"
+                            app:layout_constraintTop_toBottomOf="@id/tv_phase_1_title"
+                            app:layout_constraintStart_toEndOf="@id/fl_phase_1_icon" />
+
+                        <com.google.android.material.progressindicator.LinearProgressIndicator
+                            android:id="@+id/pb_phase_1"
+                            android:layout_width="0dp"
+                            android:layout_height="6dp"
+                            android:progress="60"
+                            app:trackColor="@color/color_divider"
+                            app:indicatorColor="@color/color_primary_bright"
+                            app:trackCornerRadius="3dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginStart="12dp"
+                            app:layout_constraintTop_toBottomOf="@id/tv_phase_1_sub"
+                            app:layout_constraintStart_toEndOf="@id/fl_phase_1_icon"
+                            app:layout_constraintEnd_toStartOf="@id/iv_phase_1_arrow"
+                            android:layout_marginEnd="16dp" />
+
+                        <ImageView
+                            android:id="@+id/iv_phase_1_arrow"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_arrow_down"
+                            app:tint="@color/color_text_tertiary"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_phase_1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="visible"
+                        tools:listitem="@layout/item_milestone" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Phase 2: Intermediate Header & List -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cv_phase_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#4D22D3EE"
+                app:strokeWidth="1.5dp"
+                app:cardBackgroundColor="@color/color_surface_2"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cl_phase_2_header"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="16dp">
+
+                        <FrameLayout
+                            android:id="@+id/fl_phase_2_icon"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/bg_fit_circle"
+                            android:backgroundTint="#2622D3EE"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent">
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_chart_bar"
+                                app:tint="@color/color_cyan" />
+                        </FrameLayout>
+
+                        <TextView
+                            android:id="@+id/tv_phase_2_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="INTERMEDIATE PHASE"
+                            style="@style/TextAppearance_AiCareer_Title_Medium"
+                            android:textColor="@color/color_text_primary"
+                            android:layout_marginStart="12dp"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/fl_phase_2_icon" />
+
+                        <TextView
+                            android:id="@+id/tv_phase_2_sub"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Weeks 5-8"
+                            style="@style/TextAppearance_AiCareer_Label_Small"
+                            android:textColor="@color/color_text_secondary"
+                            android:layout_marginStart="12dp"
+                            app:layout_constraintTop_toBottomOf="@id/tv_phase_2_title"
+                            app:layout_constraintStart_toEndOf="@id/fl_phase_2_icon" />
+
+                        <com.google.android.material.progressindicator.LinearProgressIndicator
+                            android:id="@+id/pb_phase_2"
+                            android:layout_width="0dp"
+                            android:layout_height="6dp"
+                            android:progress="20"
+                            app:trackColor="@color/color_divider"
+                            app:indicatorColor="@color/color_cyan"
+                            app:trackCornerRadius="3dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginStart="12dp"
+                            app:layout_constraintTop_toBottomOf="@id/tv_phase_2_sub"
+                            app:layout_constraintStart_toEndOf="@id/fl_phase_2_icon"
+                            app:layout_constraintEnd_toStartOf="@id/iv_phase_2_arrow"
+                            android:layout_marginEnd="16dp" />
+
+                        <ImageView
+                            android:id="@+id/iv_phase_2_arrow"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_arrow_down"
+                            app:tint="@color/color_text_tertiary"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_phase_2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Phase 3: Advanced Header & List -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cv_phase_3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#4D10B981"
+                app:strokeWidth="1.5dp"
+                app:cardBackgroundColor="@color/color_surface_2"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cl_phase_3_header"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="16dp">
+
+                        <FrameLayout
+                            android:id="@+id/fl_phase_3_icon"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/bg_fit_circle"
+                            android:backgroundTint="#2610B981"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent">
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_compass"
+                                app:tint="@color/color_emerald" />
+                        </FrameLayout>
+
+                        <TextView
+                            android:id="@+id/tv_phase_3_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="ADVANCED PHASE"
+                            style="@style/TextAppearance_AiCareer_Title_Medium"
+                            android:textColor="@color/color_text_primary"
+                            android:layout_marginStart="12dp"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/fl_phase_3_icon" />
+
+                        <TextView
+                            android:id="@+id/tv_phase_3_sub"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Weeks 9-12"
+                            style="@style/TextAppearance_AiCareer_Label_Small"
+                            android:textColor="@color/color_text_secondary"
+                            android:layout_marginStart="12dp"
+                            app:layout_constraintTop_toBottomOf="@id/tv_phase_3_title"
+                            app:layout_constraintStart_toEndOf="@id/fl_phase_3_icon" />
+
+                        <com.google.android.material.progressindicator.LinearProgressIndicator
+                            android:id="@+id/pb_phase_3"
+                            android:layout_width="0dp"
+                            android:layout_height="6dp"
+                            android:progress="10"
+                            app:trackColor="@color/color_divider"
+                            app:indicatorColor="@color/color_emerald"
+                            app:trackCornerRadius="3dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginStart="12dp"
+                            app:layout_constraintTop_toBottomOf="@id/tv_phase_3_sub"
+                            app:layout_constraintStart_toEndOf="@id/fl_phase_3_icon"
+                            app:layout_constraintEnd_toStartOf="@id/iv_phase_3_arrow"
+                            android:layout_marginEnd="16dp" />
+
+                        <ImageView
+                            android:id="@+id/iv_phase_3_arrow"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_arrow_down"
+                            app:tint="@color/color_text_tertiary"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_phase_3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Bottom Motivation Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:strokeColor="@color/color_border"
+                app:strokeWidth="1dp"
+                app:cardBackgroundColor="@color/color_surface_2"
+                app:cardCornerRadius="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp">
+
+                    <FrameLayout
+                        android:id="@+id/fl_star_container"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/bg_fit_circle"
+                        android:backgroundTint="#26A78BFA"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_star"
+                            app:tint="@color/color_primary_bright" />
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginEnd="12dp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/fl_star_container"
+                        app:layout_constraintEnd_toStartOf="@id/iv_mountain">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Stay consistent and complete your roadmap"
+                            style="@style/TextAppearance_AiCareer_Title_Medium"
+                            android:textColor="@color/color_text_primary" />
+
+                        <TextView
+                            android:id="@+id/tv_motivation_sub"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="You're on your way to becoming an Expert!"
+                            style="@style/TextAppearance_AiCareer_Body_Small"
+                            android:textColor="@color/color_text_secondary"
+                            android:layout_marginTop="4dp" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/iv_mountain"
+                        android:layout_width="80dp"
+                        android:layout_height="60dp"
+                        android:src="@drawable/ic_roadmap_mountain"
+                        android:scaleType="centerCrop"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Generate Roadmap CTA Card & Form (Visible when no roadmap active) -->
+    <ScrollView
+        android:id="@+id/sv_generate_roadmap"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@id/cl_header"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="24dp">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_glow_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/color_surface_2"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="24dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="✨ Generate Your AI Roadmap"
+                        style="@style/TextAppearance_AiCareer_Headline_Large"
+                        android:textColor="@color/color_primary_bright" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Build a custom learning pathway mapped by our topological prerequisite DAG engine based on your skill gap profile."
+                        style="@style/TextAppearance_AiCareer_Body_Medium"
+                        android:textColor="@color/color_text_secondary"
+                        android:layout_marginTop="8dp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/color_divider"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="16dp"/>
+
+                    <!-- Form: Hours per Week Input -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/til_hours"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Study Commitment (Hours per Week)">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/et_hours"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="number"
+                            android:text="15"
+                            android:textColor="@color/color_text_primary" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Form: Target Months Input -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/til_months"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Target Completion (Months)"
+                        android:layout_marginTop="16dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/et_months"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="number"
+                            android:text="3"
+                            android:textColor="@color/color_text_primary" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Gradient Primary CTA Button -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_generate"
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:text="Orchestrate AI Path"
+                        android:textAllCaps="false"
+                        android:textColor="@color/color_on_primary"
+                        android:backgroundTint="@color/color_primary"
+                        app:cornerRadius="26dp"
+                        android:layout_marginTop="24dp" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+    <!-- Overlay Loader -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FA090912"
+        android:visibility="gone"
+        android:elevation="10dp"
+        android:paddingHorizontal="20dp"
+        android:paddingTop="80dp"
+        android:paddingBottom="24dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="0dp"
+            app:strokeColor="#268B5CF6"
+            app:strokeWidth="1.5dp"
+            app:cardBackgroundColor="#1A0D0B1C">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fillViewport="true">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="24dp">
+
+                    <!-- Title -->
+                    <TextView
+                        android:id="@+id/tv_loading_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="✨ Generating Your AI Roadmap"
+                        style="@style/TextAppearance_AiCareer_Headline_Large"
+                        android:textColor="@color/color_cyan"
+                        android:textSize="20sp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+                    <!-- Subtitle -->
+                    <TextView
+                        android:id="@+id/tv_loading_subtitle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="Building a custom learning pathway mapped by our topological prerequisite DAG engine based on your skill gap profile."
+                        style="@style/TextAppearance_AiCareer_Body_Small"
+                        android:textColor="@color/color_text_secondary"
+                        android:gravity="center"
+                        android:layout_marginTop="12dp"
+                        app:layout_constraintTop_toBottomOf="@id/tv_loading_title"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+                    <!-- Circular progress area with graphic inside -->
+                    <FrameLayout
+                        android:id="@+id/fl_progress_container"
+                        android:layout_width="240dp"
+                        android:layout_height="240dp"
+                        android:layout_marginTop="24dp"
+                        app:layout_constraintTop_toBottomOf="@id/tv_loading_subtitle"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent">
+
+                        <!-- Circular Progress Track -->
+                        <com.google.android.material.progressindicator.CircularProgressIndicator
+                            android:id="@+id/pb_loading_progress"
+                            android:layout_width="220dp"
+                            android:layout_height="220dp"
+                            android:layout_gravity="center"
+                            app:indicatorSize="220dp"
+                            app:trackThickness="4dp"
+                            android:progress="42"
+                            app:trackCornerRadius="2dp"
+                            app:indicatorColor="@color/color_primary_bright"
+                            app:trackColor="#1AFFFFFF" />
+
+                        <!-- Central 3D Graphic -->
+                        <ImageView
+                            android:id="@+id/iv_loading_graphic"
+                            android:layout_width="160dp"
+                            android:layout_height="160dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/prerequisite_dag_layers"
+                            android:scaleType="fitCenter" />
+
+                    </FrameLayout>
+
+                    <!-- Large percentage -->
+                    <TextView
+                        android:id="@+id/tv_loading_pct"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="42%"
+                        style="@style/TextAppearance_AiCareer_Headline_Large"
+                        android:textColor="@color/color_primary_bright"
+                        android:textSize="36sp"
+                        android:layout_marginTop="16dp"
+                        app:layout_constraintTop_toBottomOf="@id/fl_progress_container"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+                    <!-- Status subtext -->
+                    <TextView
+                        android:id="@+id/tv_loading_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Assembling topological prerequisites..."
+                        style="@style/TextAppearance_AiCareer_Body_Small"
+                        android:textColor="@color/color_text_secondary"
+                        android:layout_marginTop="4dp"
+                        app:layout_constraintTop_toBottomOf="@id/tv_loading_pct"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+                    <!-- Checklist Card Container -->
+                    <LinearLayout
+                        android:id="@+id/ll_checklist_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="@drawable/bg_resource_card"
+                        android:backgroundTint="#0FFFFFFF"
+                        android:padding="16dp"
+                        android:layout_marginTop="24dp"
+                        app:layout_constraintTop_toBottomOf="@id/tv_loading_status"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent">
+
+                        <!-- Item 1 -->
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="12dp">
+                            <ImageView
+                                android:id="@+id/iv_step1_icon"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/ic_check"
+                                app:tint="@color/color_primary_bright"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="parent" />
+                            <TextView
+                                android:id="@+id/tv_step1_title"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:text="Analyzing your skill profile"
+                                style="@style/TextAppearance_AiCareer_Title_Medium"
+                                android:textColor="@color/color_text_primary"
+                                android:textSize="13sp"
+                                android:layout_marginStart="12dp"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toEndOf="@id/iv_step1_icon"
+                                app:layout_constraintEnd_toStartOf="@id/tv_step1_status" />
+                            <TextView
+                                android:id="@+id/tv_step1_status"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Completed"
+                                style="@style/TextAppearance_AiCareer_Mono_Small"
+                                android:textColor="@color/color_emerald"
+                                android:textSize="12sp"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <!-- Item 2 -->
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="12dp">
+                            <ImageView
+                                android:id="@+id/iv_step2_icon"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/bg_pulse_dot_cyan"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="parent" />
+                            <TextView
+                                android:id="@+id/tv_step2_title"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:text="Mapping prerequisite concepts"
+                                style="@style/TextAppearance_AiCareer_Title_Medium"
+                                android:textColor="@color/color_text_primary"
+                                android:textSize="13sp"
+                                android:textStyle="bold"
+                                android:layout_marginStart="12dp"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toEndOf="@id/iv_step2_icon"
+                                app:layout_constraintEnd_toStartOf="@id/tv_step2_status" />
+                            <TextView
+                                android:id="@+id/tv_step2_status"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="In progress"
+                                style="@style/TextAppearance_AiCareer_Mono_Small"
+                                android:textColor="@color/color_primary_bright"
+                                android:textSize="12sp"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <!-- Item 3 -->
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="12dp">
+                            <ImageView
+                                android:id="@+id/iv_step3_icon"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/bg_indicator_dot_inactive"
+                                app:tint="@color/color_text_tertiary"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="parent" />
+                            <TextView
+                                android:id="@+id/tv_step3_title"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:text="Optimizing learning sequence"
+                                style="@style/TextAppearance_AiCareer_Title_Medium"
+                                android:textColor="@color/color_text_tertiary"
+                                android:textSize="13sp"
+                                android:layout_marginStart="12dp"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toEndOf="@id/iv_step3_icon"
+                                app:layout_constraintEnd_toStartOf="@id/tv_step3_status" />
+                            <TextView
+                                android:id="@+id/tv_step3_status"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Pending"
+                                style="@style/TextAppearance_AiCareer_Mono_Small"
+                                android:textColor="@color/color_text_tertiary"
+                                android:textSize="12sp"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <!-- Item 4 -->
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <ImageView
+                                android:id="@+id/iv_step4_icon"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/bg_indicator_dot_inactive"
+                                app:tint="@color/color_text_tertiary"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="parent" />
+                            <TextView
+                                android:id="@+id/tv_step4_title"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:text="Finalizing personalized roadmap"
+                                style="@style/TextAppearance_AiCareer_Title_Medium"
+                                android:textColor="@color/color_text_tertiary"
+                                android:textSize="13sp"
+                                android:layout_marginStart="12dp"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toEndOf="@id/iv_step4_icon"
+                                app:layout_constraintEnd_toStartOf="@id/tv_step4_status" />
+                            <TextView
+                                android:id="@+id/tv_step4_status"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Pending"
+                                style="@style/TextAppearance_AiCareer_Mono_Small"
+                                android:textColor="@color/color_text_tertiary"
+                                android:textSize="12sp"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    </LinearLayout>
+
+                    <!-- Footer moment banner -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_resource_card"
+                        android:backgroundTint="#1F7C3AED"
+                        android:padding="12dp"
+                        android:layout_marginTop="20dp"
+                        app:layout_constraintTop_toBottomOf="@id/ll_checklist_container"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent">
+
+                        <FrameLayout
+                            android:id="@+id/fl_star_badge"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:background="@drawable/bg_fit_circle"
+                            android:backgroundTint="#267C3AED"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent">
+                            <ImageView
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_star"
+                                app:tint="@color/color_primary_bright" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginStart="12dp"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/fl_star_badge"
+                            app:layout_constraintEnd_toEndOf="parent">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="This may take a few moments."
+                                style="@style/TextAppearance_AiCareer_Title_Medium"
+                                android:textColor="@color/color_text_primary"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Your personalized roadmap will be worth the wait!"
+                                style="@style/TextAppearance_AiCareer_Body_Small"
+                                android:textColor="@color/color_text_secondary"
+                                android:textSize="10sp" />
+                        </LinearLayout>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </ScrollView>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
