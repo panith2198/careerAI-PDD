@@ -33,12 +33,9 @@ class MistralEmbedder:
             for i in range(0, len(texts), chunk_size):
                 chunk = texts[i : i + chunk_size]
                 
-                # Mock fallback for dev environments
+                # Fail if API Key is missing
                 if not self.api_key or self.api_key == "your-mistral-api-key-here":
-                    logger.warning("Mistral API Key is unconfigured. Returning mock 1024-dim vectors.")
-                    # Yield mock 1024-dim float arrays
-                    batched_results.extend([[0.01 * j] * 1024 for j in range(len(chunk))])
-                    continue
+                    raise ValueError("Mistral API Key is unconfigured. Please configure MISTRAL_API_KEY in .env.")
                     
                 payload = {
                     "model": self.model,
@@ -58,11 +55,10 @@ class MistralEmbedder:
                         batched_results.extend(embeddings)
                     else:
                         logger.error(f"Mistral embedding error {response.status_code}: {response.text}")
-                        # Return zeroed fallback arrays
-                        batched_results.extend([[0.0] * 1024 for _ in range(len(chunk))])
+                        raise httpx.HTTPStatusError(f"Mistral embedding error {response.status_code}", request=response.request, response=response)
                 except Exception as e:
                     logger.error(f"Network failure generating embeddings: {e}")
-                    batched_results.extend([[0.0] * 1024 for _ in range(len(chunk))])
+                    raise e
                     
         return batched_results
 

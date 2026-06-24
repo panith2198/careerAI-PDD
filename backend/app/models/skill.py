@@ -43,7 +43,7 @@ class UserSkill(Base):
     is_verified: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     endorsed_by_count: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     source: Mapped[str] = mapped_column(
-        Enum("self", "assessment", "ai", "resume", "mentor", name="skill_source_enum"), 
+        Enum("self", "assessment", "ai", "resume", name="skill_source_enum"), 
         default="self", 
         nullable=False
     )

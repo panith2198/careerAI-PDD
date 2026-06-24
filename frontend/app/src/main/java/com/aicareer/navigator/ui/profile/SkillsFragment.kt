@@ -43,7 +43,7 @@ class SkillsFragment : Fragment() {
     private var selectedSkillFromSearch: SkillDto? = null
 
     private val proficiencyLevels = listOf("beginner", "intermediate", "advanced", "expert")
-    private val skillSources = listOf("self", "assessment", "ai", "resume", "mentor")
+    private val skillSources = listOf("self", "assessment", "ai", "resume")
 
     private var currentStep = 1
     private var isEditMode = false

@@ -108,24 +108,6 @@ interface HomeApiService {
     @retrofit2.http.DELETE("api/v1/users/me")
     suspend fun deleteAccount(): StandardApiResponse
 
-    @retrofit2.http.GET("api/v1/mentors/list")
-    suspend fun getMentorsList(
-        @retrofit2.http.Query("skill") skill: String? = null,
-        @retrofit2.http.Query("availability") availability: String? = null,
-        @retrofit2.http.Query("min_rating") minRating: Float? = null,
-        @retrofit2.http.Query("is_free") isFree: Boolean? = null
-    ): MentorsListResponse
-
-    @retrofit2.http.GET("api/v1/mentors/{id}")
-    suspend fun getMentorDetail(
-        @retrofit2.http.Path("id") id: Int
-    ): MentorDetailDto
-
-    @retrofit2.http.POST("api/v1/mentors/session/book")
-    suspend fun bookMentorSession(
-        @retrofit2.http.Body payload: MentorSessionBookPayload
-    ): MentorSessionBookResponse
-
     // === Notifications ===
 
     @retrofit2.http.GET("api/v1/notifications/list")
@@ -499,57 +481,6 @@ data class StandardApiResponse(
     val status: String? = null
 )
 
-// === MENTOR FEATURE DTOs ===
-
-data class MentorsListResponse(
-    val items: List<MentorDto>?
-)
-
-data class MentorDto(
-    val mentor_id: Int,
-    val full_name: String,
-    val designation: String?,
-    val avatar_url: String?,
-    val rating: Float?,
-    val total_sessions: Int?,
-    val hourly_rate: Int?,
-    val expertise: List<String>?,
-    val is_pro: Boolean?,
-    val ai_match_score: Float?
-)
-
-data class MentorDetailDto(
-    val mentor_id: Int,
-    val full_name: String,
-    val designation: String?,
-    val avatar_url: String?,
-    val bio: String?,
-    val years_experience: Int?,
-    val rating: Float?,
-    val total_sessions: Int?,
-    val hourly_rate: Int?,
-    val expertise: List<String>?,
-    val is_pro: Boolean?,
-    val availability_slots: List<AvailabilitySlotDto>?
-)
-
-data class AvailabilitySlotDto(
-    val day: String,
-    val time: String,
-    val is_available: Boolean
-)
-
-data class MentorSessionBookPayload(
-    val mentor_id: Int,
-    val slot_day: String,
-    val slot_time: String
-)
-
-data class MentorSessionBookResponse(
-    val session_id: Int?,
-    val status: String?,
-    val message: String?
-)
 
 // === Notification DTOs ===
 

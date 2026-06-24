@@ -71,18 +71,6 @@ ROLE_PERMISSIONS: Dict[str, List[str]] = {
         "job:read",
         "job:apply",
         "notification:*"
-    ],
-    "mentor": [
-        "user:me:*",
-        "career:read",
-        "assessment:read",
-        "job:read",
-        "mentor:profile:*",
-        "mentor:sessions:*",
-        "notification:*"
-    ],
-    "admin": [
-        "*"  # Superuser access
     ]
 }
 

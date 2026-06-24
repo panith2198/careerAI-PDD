@@ -25,14 +25,9 @@ class StreamingHandler:
         Connect to Mistral API in stream mode and yield standardized Server-Sent Events.
         Format: 'data: {"text": "..."}\n\n'
         """
-        # Mock connection fallback if api key is missing to keep dev/staging compilations intact
+        # Fail if API Key is missing or placeholder
         if not self.api_key or self.api_key == "your-mistral-api-key-here":
-            logger.warning("Mistral API Key is unconfigured. Yielding mock stream blocks.")
-            mock_tokens = ["This", " is", " a", " mock", " stream", " output.", " Configure", " MISTRAL_API_KEY", " in", " your", " .env."]
-            for token in mock_tokens:
-                yield f"data: {json.dumps({'text': token})}\n\n"
-            yield "data: [DONE]\n\n"
-            return
+            raise ValueError("Mistral API Key is unconfigured. Please configure MISTRAL_API_KEY in .env.")
 
         headers = {
             "Authorization": f"Bearer {self.api_key}",
@@ -57,9 +52,7 @@ class StreamingHandler:
                 async with client.stream("POST", self.base_url, headers=headers, json=payload) as response:
                     if response.status_code != 200:
                         logger.error(f"Mistral Stream API returned status code {response.status_code}")
-                        yield f"data: {json.dumps({'text': 'Error connecting to LLM stream.'})}\n\n"
-                        yield "data: [DONE]\n\n"
-                        return
+                        raise httpx.HTTPStatusError(f"Mistral Stream API returned status code {response.status_code}", request=response.request, response=response)
 
                     async for line in response.aiter_lines():
                         if not line:
@@ -85,7 +78,6 @@ class StreamingHandler:
                                 
             except Exception as e:
                 logger.error(f"Stream generation encountered a network error: {e}")
-                yield f"data: {json.dumps({'text': 'Stream disconnected.'})}\n\n"
-                yield "data: [DONE]\n\n"
+                raise e
 
 streaming_handler = StreamingHandler()

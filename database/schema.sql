@@ -7,8 +7,11 @@ USE `careerai`;
 SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `audit_logs`;
 DROP TABLE IF EXISTS `notifications`;
+DROP TABLE IF EXISTS `chat_messages`;
+DROP TABLE IF EXISTS `chat_sessions`;
+DROP TABLE IF EXISTS `user_otps`;
 DROP TABLE IF EXISTS `career_recommendations`;
-DROP TABLE IF EXISTS `mentors`;
+
 DROP TABLE IF EXISTS `job_applications`;
 DROP TABLE IF EXISTS `jobs`;
 DROP TABLE IF EXISTS `roadmaps`;
@@ -34,7 +37,7 @@ CREATE TABLE `users` (
   `phone` VARCHAR(20) UNIQUE NULL COMMENT 'OTP-verified phone number',
   `password_hash` VARCHAR(255) NOT NULL COMMENT 'bcrypt hash cost=12',
   `full_name` VARCHAR(120) NOT NULL COMMENT 'Display name',
-  `role` ENUM('student', 'mentor', 'admin') DEFAULT 'student' COMMENT 'RBAC role for permission checks',
+  `role` ENUM('student') DEFAULT 'student' COMMENT 'RBAC role for permission checks',
   `subscription_tier` ENUM('free', 'pro', 'enterprise') DEFAULT 'free' COMMENT 'Feature gating; token budget tier',
   `mistral_token_budget` INT UNSIGNED DEFAULT 10000 COMMENT 'Monthly MistralAI token allowance per tier',
   `is_verified` TINYINT(1) DEFAULT 0 COMMENT 'Email verified flag',
@@ -139,7 +142,7 @@ CREATE TABLE `user_skills` (
   `years_of_experience` DECIMAL(3,1) DEFAULT 0.0 COMMENT 'Years actively using this skill',
   `is_verified` TINYINT(1) DEFAULT 0 COMMENT 'Verified via assessment test flag',
   `endorsed_by_count` INT UNSIGNED DEFAULT 0 COMMENT 'Number of mentors who endorsed this skill',
-  `source` ENUM('self', 'assessment', 'ai', 'resume', 'mentor') DEFAULT 'self' COMMENT 'How this skill was added to profile',
+  `source` ENUM('self', 'assessment', 'ai', 'resume') DEFAULT 'self' COMMENT 'How this skill was added to profile',
   `added_at` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'When skill was added to user profile',
   CONSTRAINT `fk_user_skills_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_user_skills_skill_id` FOREIGN KEY (`skill_id`) REFERENCES `skills` (`skill_id`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -246,17 +249,23 @@ CREATE TABLE `roadmaps` (
 CREATE TABLE `jobs` (
   `job_id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   `external_id` VARCHAR(100) UNIQUE NULL COMMENT 'External job ID from source API (LinkedIn, Naukri)',
+  `job_url` VARCHAR(500) NULL COMMENT 'Direct link to job post',
+  `job_url_direct` VARCHAR(500) NULL COMMENT 'Apply link',
   `title` VARCHAR(200) NOT NULL COMMENT 'Job title as posted by employer',
   `company_name` VARCHAR(200) NOT NULL COMMENT 'Hiring company name',
+  `company_url` VARCHAR(300) NULL COMMENT 'Hiring company link',
+  `company_logo_url` VARCHAR(500) NULL COMMENT 'Hiring company logo link',
   `career_id` INT UNSIGNED NULL COMMENT 'Mapped career category for this job',
   `description_raw` LONGTEXT NOT NULL COMMENT 'Full job description for NLP/AI parsing',
   `required_skills_json` JSON NOT NULL COMMENT 'AI-extracted required skills from JD',
   `location_city` VARCHAR(100) NULL COMMENT 'Job location city',
   `work_mode` ENUM('remote', 'onsite', 'hybrid') NOT NULL COMMENT 'Work mode requirement',
+  `job_type` ENUM('fulltime', 'parttime', 'internship', 'contract') NULL COMMENT 'Employment type',
   `experience_min_months` SMALLINT UNSIGNED DEFAULT 0 COMMENT 'Minimum experience required in months',
   `salary_min` INT UNSIGNED NULL COMMENT 'Minimum salary offered (INR per annum)',
   `salary_max` INT UNSIGNED NULL COMMENT 'Maximum salary offered (INR per annum)',
-  `source` ENUM('linkedin', 'naukri', 'indeed', 'internal', 'manual') NOT NULL COMMENT 'Job data source for attribution',
+  `currency` VARCHAR(10) DEFAULT 'INR' NULL COMMENT 'Salary currency',
+  `source` ENUM('linkedin', 'naukri', 'indeed', 'zip_recruiter', 'google', 'glassdoor', 'internal', 'manual') NOT NULL COMMENT 'Job data source for attribution',
   `is_fresher_eligible` TINYINT(1) DEFAULT 1 COMMENT 'Whether job accepts fresh graduates',
   `posting_date` DATE NOT NULL COMMENT 'Original job posting date',
   `expiry_date` DATE NULL COMMENT 'Job listing expiry date for auto-removal',
@@ -286,25 +295,6 @@ CREATE TABLE `job_applications` (
   UNIQUE KEY `uq_job_applications_user_job` (`user_id`, `job_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ==========================================
--- 14. Mentors Table
--- ==========================================
-CREATE TABLE `mentors` (
-  `mentor_id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  `user_id` INT UNSIGNED UNIQUE NOT NULL COMMENT 'Linked user account (role=mentor)',
-  `designation` VARCHAR(150) NOT NULL COMMENT 'Current job title and company',
-  `years_experience` TINYINT UNSIGNED NOT NULL COMMENT 'Total years of industry experience',
-  `expertise_skills_json` JSON NOT NULL COMMENT 'Array of skill IDs mentor can guide on',
-  `hourly_rate_inr` INT UNSIGNED DEFAULT 0 COMMENT 'Session rate (0 = free/volunteer mentor)',
-  `availability_json` JSON NULL COMMENT 'Weekly availability slots for booking',
-  `rating_avg` DECIMAL(3,2) DEFAULT 0.00 COMMENT 'Average mentor rating from 1.0 to 5.0',
-  `total_sessions` INT UNSIGNED DEFAULT 0 COMMENT 'Total mentoring sessions completed',
-  `bio` TEXT NOT NULL COMMENT 'Mentor introduction and mentoring philosophy',
-  `is_verified` TINYINT(1) DEFAULT 0 COMMENT 'Background verification status flag',
-  `is_available` TINYINT(1) DEFAULT 1 COMMENT 'Current availability for new mentees',
-  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Mentor profile creation timestamp',
-  CONSTRAINT `fk_mentors_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ==========================================
 -- 15. Career Recommendations Table
@@ -330,7 +320,7 @@ CREATE TABLE `career_recommendations` (
 CREATE TABLE `notifications` (
   `notification_id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   `user_id` INT UNSIGNED NOT NULL COMMENT 'Notification recipient user',
-  `type` ENUM('system', 'job_match', 'roadmap', 'assessment', 'mentor', 'ai_tip') NOT NULL COMMENT 'Notification category for filtering and display',
+  `type` ENUM('system', 'job_match', 'roadmap', 'assessment', 'ai_tip') NOT NULL COMMENT 'Notification category for filtering and display',
   `title` VARCHAR(200) NOT NULL COMMENT 'Short notification title for push/in-app display',
   `message` TEXT NOT NULL COMMENT 'Full notification message content',
   `action_url` VARCHAR(500) NULL COMMENT 'Deep link URL for notification CTA button',
@@ -358,3 +348,46 @@ CREATE TABLE `audit_logs` (
   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Event timestamp (partition key for archival)',
   CONSTRAINT `fk_audit_logs_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+-- ==========================================
+-- 19. User OTPs Table
+-- ==========================================
+CREATE TABLE `user_otps` (
+  `otp_id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  `email` VARCHAR(255) NOT NULL COMMENT 'Email to which OTP was sent',
+  `code` VARCHAR(10) NOT NULL COMMENT 'Verification code',
+  `expires_at` DATETIME NOT NULL COMMENT 'Expiration timestamp',
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation timestamp',
+  INDEX `idx_user_otps_email` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ==========================================
+-- 20. Chat Sessions Table
+-- ==========================================
+CREATE TABLE `chat_sessions` (
+  `session_id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  `user_id` INT UNSIGNED NOT NULL COMMENT 'User who owns this session',
+  `title` VARCHAR(255) NOT NULL DEFAULT 'New Chat Session' COMMENT 'Session display title',
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation timestamp',
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Last update timestamp',
+  CONSTRAINT `fk_chat_sessions_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  INDEX `idx_chat_sessions_user_id` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ==========================================
+-- 21. Chat Messages Table
+-- ==========================================
+CREATE TABLE `chat_messages` (
+  `message_id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  `session_id` INT UNSIGNED NOT NULL COMMENT 'Chat session this message belongs to',
+  `is_user` TINYINT(1) NOT NULL COMMENT 'Flag indicating if message is from user (1) or AI (0)',
+  `message_text` TEXT NOT NULL COMMENT 'Message content text',
+  `confidence` DECIMAL(5,2) NULL COMMENT 'AI answer confidence score',
+  `sources_json` JSON NULL COMMENT 'Source documents cited by AI',
+  `model_used` VARCHAR(50) NULL COMMENT 'LLM model version used for generation',
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Message timestamp',
+  CONSTRAINT `fk_chat_messages_session_id` FOREIGN KEY (`session_id`) REFERENCES `chat_sessions` (`session_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  INDEX `idx_chat_messages_session_id` (`session_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+

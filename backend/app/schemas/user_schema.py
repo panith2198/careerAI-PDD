@@ -90,15 +90,4 @@ class UserSkillResponse(BaseModel):
     class Config:
         from_attributes = True
 
-class MentorResponse(BaseModel):
-    mentor_id: int
-    designation: str
-    years_experience: int
-    expertise_skills_json: Dict[str, Any]
-    hourly_rate_inr: int
-    rating_avg: float
-    bio: str
-
-    class Config:
-        from_attributes = True
 

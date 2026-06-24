@@ -35,6 +35,9 @@ async def lifespan(app: FastAPI):
     yield
     logger.info("Shutting down CareerAI Backend Service...")
 
+from fastapi.staticfiles import StaticFiles
+import os
+
 # Initialize FastAPI App
 app = FastAPI(
     title=settings.APP_NAME,
@@ -43,6 +46,14 @@ app = FastAPI(
     debug=settings.DEBUG,
     lifespan=lifespan
 )
+
+# Ensure storage directories exist
+os.makedirs("storage/user_uploads", exist_ok=True)
+os.makedirs("storage/resumes", exist_ok=True)
+os.makedirs("storage/kb", exist_ok=True)
+
+# Mount static storage
+app.mount("/storage", StaticFiles(directory="storage"), name="storage")
 
 # CORS Policies
 app.add_middleware(
@@ -62,25 +73,24 @@ from app.api.v1.roadmap import router as roadmap_router
 from app.api.v1.jobs import router as jobs_router
 from app.api.v1.rag import router as rag_router
 from app.api.v1.resume import router as resume_router
-from app.api.v1.mentor import router as mentor_router
 from app.api.v1.analytics import router as analytics_router
 from app.api.v1.notifications import router as notifications_router
-from app.api.v1.admin import router as admin_router
 from app.api.v1.websocket import router as ws_router
 
 app.include_router(auth_router, prefix="/api/v1/auth", tags=["Authentication"])
 app.include_router(users_router, prefix="/api/v1/users", tags=["User Profiles"])
 app.include_router(career_router, prefix="/api/v1/careers", tags=["Careers"])
+app.include_router(career_router, prefix="/api/v1/career", tags=["Careers"])
 app.include_router(assessment_router, prefix="/api/v1/assessments", tags=["Assessments"])
+app.include_router(assessment_router, prefix="/api/v1/assessment", tags=["Assessments"])
 app.include_router(roadmap_router, prefix="/api/v1/roadmaps", tags=["Learning Roadmaps"])
+app.include_router(roadmap_router, prefix="/api/v1/roadmap", tags=["Learning Roadmaps"])
 app.include_router(jobs_router, prefix="/api/v1/jobs", tags=["Jobs Matching"])
 app.include_router(rag_router, prefix="/api/v1/rag", tags=["Knowledge RAG Query"])
 app.include_router(resume_router, prefix="/api/v1/resumes", tags=["Resumes ATS Ingestion"])
 app.include_router(resume_router, prefix="/api/v1/resume", tags=["Resumes ATS Ingestion"])
-app.include_router(mentor_router, prefix="/api/v1/mentors", tags=["Mentors Advising"])
 app.include_router(analytics_router, prefix="/api/v1/analytics", tags=["Dashboard Analytics"])
 app.include_router(notifications_router, prefix="/api/v1/notifications", tags=["Notifications"])
-app.include_router(admin_router, prefix="/api/v1/admin", tags=["Admin Portal"])
 app.include_router(ws_router, tags=["WebSockets Real-time"])
 
 

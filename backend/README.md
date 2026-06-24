@@ -1,146 +1,137 @@
-# AI Smart Career Navigator v2.0 — Backend
+# CareerAI — Asynchronous Backend Service ⚙️
 
-A production-grade, highly scalable asynchronous FastAPI backend service utilizing MistralAI reasoning pipelines, local MS-MARCO Cross-Encoder reranking, layout-aware PDF extraction engines, and custom Data Structures & Algorithms (DSA).
+Welcome to the backend core of **CareerAI**, a production-grade, highly scalable asynchronous FastAPI microservice. The service implements sophisticated career-path finding algorithms, hybrid search semantic-matchers, RAG chatbot layers, layout-aware PDF extraction engines, and Celery tasks queues.
 
 ---
 
-## 🚀 Quick Start Guide
+## ⚡ Key Architectural Features
+
+1. **FastAPI ASGI Gateway**: High-concurrency async REST API & WebSockets.
+2. **Hybrid Search RAG**: Combines local Okapi BM25 sparse search and ChromaDB dense vector indexing, filtered using an `ms-marco-MiniLM-L-6-v2` Cross-Encoder reranker.
+3. **Advanced DSA Algorithms**: Includes custom Graph-theory algorithms (e.g., career-graph path calculation in `career_graph.py` and recommendations in `recommendation.py`).
+4. **Celery Worker Pipelines**: Offloads heavy tasks (e.g., layout-aware PDF parsing and resume vectorization) to parallel background queues managed by Redis.
+5. **Robust Database Layer**: Dual persistence strategy using SQLAlchemy 2.0 (Async) + MySQL for user data and ChromaDB for vector base.
+
+---
+
+## 📡 API Service Routers
+
+The API gateway mounts the following routers at `/api/v1`:
+
+| Router Prefix | Tag | Description | Core Endpoints |
+| --- | --- | --- | --- |
+| `/auth` | `Authentication` | User lifecycle, OTP verification, JWT session tokens. | `/register`, `/login`, `/verify-otp`, `/refresh` |
+| `/users` | `User Profiles` | Manages user metadata, skills matrix, onboarding flags. | `/me`, `/skills`, `/onboard` |
+| `/careers` | `Careers` | Career exploration, Graph algorithms, Skill dependencies. | `/search`, `/{slug}`, `/{slug}/graph` |
+| `/assessments` | `Assessments` | Dynamic quiz creation, live grading, assessment results. | `/list`, `/quiz`, `/grade`, `/results` |
+| `/roadmaps` | `Learning Roadmaps` | Dynamic milestone planning, study time recommendations. | `/create`, `/{id}`, `/milestones` |
+| `/jobs` | `Jobs Matching` | Core jobs search, recommendation algorithms, profiles fit. | `/match`, `/search`, `/{id}` |
+| `/rag` | `Knowledge RAG` | Vector database search, semantic context answers. | `/query`, `/kb/status` |
+| `/resumes` | `Resumes ATS` | Multi-engine PDF layout parser (PyMuPDF, pdfplumber). | `/upload`, `/{id}/parse` |
+| `/analytics` | `Dashboard Analytics` | Progress diagnostics, skill gap tracking, history. | `/overview`, `/skill-gap` |
+| `/notifications` | `Notifications` | Dynamic user alerting system, transactional emails. | `/list`, `/read` |
+| `/ws` | `WebSockets` | Real-time full-duplex channels (e.g., chat stream). | `/ws/chat`, `/ws/notifications` |
+
+---
+
+## 🧠 AI Cognitive & Machine Learning Stack
+
+CareerAI features a hybrid cognitive stack:
+
+* **Reasoning Agent**: **MistralAI** (via SDK `mistralai>=1.0.0`) provides roadmap generation and RAG reasoning synthesis.
+* **Dense Vectors**: Custom sentence-transformer client parsing documents into 384-dimensional dense vectors using **`all-MiniLM-L6-v2`**.
+* **Semantic Reranking**: Locally loaded **`ms-marco-MiniLM-L-6-v2`** Cross-Encoder model. Reranks vector retrieval results for maximum precision.
+* **Natural Language Parsing**: **spaCy NLP** (`en_core_web_sm`) is utilized for Named Entity Recognition (NER), extracting skills, projects, and educational details from uploaded resumes.
+* **Sparse Indexing**: Local **Okapi BM25** implementation coordinates fast matching on exact keyword syntax.
+* **Vector Base**: Persistent **ChromaDB** client storing chunked knowledge base documents.
+
+---
+
+## ⚙️ Celery Async Tasks System
+
+Heavy document parsing, vector database indexing, and external notification dispatches are run asynchronously in Celery background workers.
+
+```mermaid
+graph LR
+    A[FastAPI Server] -->|Delay Task| B[(Redis Broker)]
+    B -->|Fetch Work| C[Celery Worker Pool]
+    C -->|Parse PDF| D[PyMuPDF / pdfplumber]
+    C -->|Vectorize| E[ChromaDB Client]
+    C -->|Store Result| F[(MySQL DB)]
+```
+
+* **Redis Broker**: Operates at `redis://localhost:6379/0`.
+* **Celery Engine**: Defined in `app/tasks/celery_app.py`.
+* **Flower Monitor**: Visual metrics board tracking workers, task failures, execution latencies, and worker health.
+
+---
+
+## 🛠️ Telemetry & System Diagnostics
+
+CareerAI includes scripts to verify that your configurations and service connections are correctly integrated:
+
+```bash
+# Run system diagnostics
+python scripts/verify_system.py
+
+# Verify router endpoints and connections
+$env:PYTHONPATH="."; python scripts/test_endpoints.py
+```
+
+These validation scripts write detailed report logs to the `checks.md` file in this directory.
+
+---
+
+## 🚀 Quick Setup Guide
 
 ### 1. Prerequisites
-Ensure you have the following services installed and running locally:
-* **Python 3.12 or 3.13**
-* **MySQL 8.x** (typically run via XAMPP or native service)
-* **Redis 7.x** (used as task broker, rate-limiter, and caching layer)
+Verify you have the following running locally:
+* **Python 3.12+**
+* **MySQL 8.x** (e.g., through XAMPP or local server)
+* **Redis 7.x**
 
----
-
-### 2. Setting Up the Virtual Environment
-
-From the `backend/` directory, create and activate a Python virtual environment:
-
-```bash
-# Create Virtual Environment
-python -m venv .venv
-
-# Activate Virtual Environment (Windows PowerShell)
-.venv\Scripts\Activate.ps1
-
-# Activate Virtual Environment (Windows Command Prompt)
-.venv\Scripts\activate
-
-# Activate Virtual Environment (Linux / macOS)
-source .venv/bin/activate
-```
-
----
-
-### 3. Installing Dependencies
-
-Install all core full-stack dependencies pinned inside `requirements.txt`:
-
-```bash
-python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
-```
-
----
-
-### 4. Configuration Settings (`.env`)
-
-Configure your environment settings. Duplicate or verify the `.env` file in the `backend/` directory:
-
+### 2. Environment Configurations (`.env`)
+Create a `.env` file in the `backend/` directory:
 ```ini
 APP_NAME="AI Smart Career Navigator"
 APP_ENV="development"
 DEBUG=true
 
-# Security
-SECRET_KEY="supersecretkeyforlocaldevelopmentcareerainavigator"
+# JWT Encryption
+SECRET_KEY="your-jwt-signing-secret-key-goes-here"
 ACCESS_TOKEN_EXPIRE_MINUTES=60
 
 # Relational Database (MySQL)
 DATABASE_URL="mysql+aiomysql://root:@localhost:3306/careerai"
 
-# Task Broker & Cache (Redis)
+# Redis Cache / Broker
 REDIS_URL="redis://localhost:6379/0"
 
-# MistralAI API Key
-MISTRAL_API_KEY="your-mistral-api-key-here"
+# MistralAI Key
+MISTRAL_API_KEY="your-mistral-api-key"
 
-# Vector Persist Directory
+# Vectors Directory
 CHROMA_PERSIST_DIR="../database/vector_data"
 ```
 
----
-
-### 5. Database Initializations
-
-Ensure your XAMPP/MySQL database server is running and a database named `careerai` is instantiated.
-To verify migrations and bootstrap systems, you can execute the seeding scripts:
-
-```bash
-# Seed the core MySQL database schema and mock records
-# (Ensure database/schema.sql is executed against your local mysql client)
-```
-
----
-
-### 6. Launching the Services
-
-You must start both the async HTTP gateway and the background Celery workers.
-
-#### **Start FastAPI Server (Gateway)**
-Runs the ASGI web server with hot-reload enabled at `http://localhost:8000`:
-```bash
-uvicorn main:app --reload
-
-python -m uvicorn main:app --reload --host 0.0.0.0 --port 8000
-
-
-```
-
-#### **Start Celery Worker (Async Task Engine)**
-In a separate terminal (with the virtual environment activated), start the Celery async task queue:
-```bash
-celery -A app.tasks worker --loglevel=info
-```
-
-#### **Start Flower Dashboard (Celery Monitor - Optional)**
-Monitors background worker pools at `http://localhost:5555`:
-```bash
-celery -A app.tasks flower
-```
-
----
-
-## 🛠️ Telemetry & System Verification
-
-To run programmatic integration, import, and token-bucket rate limiter checks across the code:
-
-```bash
-# Run compiler checks
-$env:PYTHONPATH="."; python scripts/test_endpoints.py
-
-# Run standard telemetry diagnostics
-python scripts/verify_system.py
-```
-
-All metrics, database models, and RAG pipelines are mapped directly inside the generated `checks.md` file upon test script execution.
-
----
-
-## 🧩 Tech Stack Architecture
-
-* **Core REST Gateway**: FastAPI + Uvicorn + Pydantic v2
-* **Relational Core**: SQLAlchemy 2.0 (Async) + MySQL (XAMPP InnoDB)
-* **Background Ingestions**: Celery + Redis
-* **AI Cognitive Core**: MistralAI (SDK v1.x)
-* **Local Neural Models**: `ms-marco-MiniLM-L-6-v2` cross-encoder rerankers, `all-MiniLM-L6-v2` embeddings, and `spaCy` NER
-* **RAG Vector Engine**: ChromaDB persistent client + Okapi BM25 sparse search
-* **PDF Parse Ingestions**: PyMuPDF + pdfplumber + Camelot
-
-
-
-taskkill /F /IM python.exe /IM uvicorn.exe
-
-netstat -ano | findstr 8000
+### 3. Setup Virtual Environment & Run
+1. Create and activate environment:
+   ```bash
+   python -m venv .venv
+   .venv\Scripts\Activate.ps1   # Windows PowerShell
+   source .venv/bin/activate    # Linux/macOS
+   ```
+2. Install dependencies:
+   ```bash
+   pip install --upgrade pip
+   pip install -r requirements.txt
+   ```
+3. Initialize the MySQL tables using schema script in `../database/schema.sql`.
+4. Run the API ASGI server:
+   ```bash
+   uvicorn main:app --reload
+   ```
+5. In a new terminal (with active virtual env), start Celery workers:
+   ```bash
+   celery -A app.tasks worker --loglevel=info
+   ```

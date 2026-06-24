@@ -90,10 +90,15 @@ async def get_dashboard_metrics(
             "hours_per_week": rm.hours_per_week
         })
 
-    # 4. Fetch Career Fit Trends
+    # 4. Fetch Career Fit Trends (Tracking the top-ranked recommendation score over time)
     stmt_recs = (
         select(CareerRecommendation)
-        .where(CareerRecommendation.user_id == current_user.user_id)
+        .where(
+            and_(
+                CareerRecommendation.user_id == current_user.user_id,
+                CareerRecommendation.rank == 1
+            )
+        )
         .order_by(desc(CareerRecommendation.created_at))
         .limit(10)
     )
@@ -114,15 +119,6 @@ async def get_dashboard_metrics(
             "trigger": rc.trigger,
             "generated_at": rc.created_at.isoformat()
         })
-
-    # High-quality mock defaults if history is sparse (ensures smooth visual UX)
-    if not career_fit_trend:
-        now = datetime.datetime.utcnow()
-        career_fit_trend = [
-            {"rec_id": 1, "career_id": 1, "fit_score": 65.5, "rank": 1, "trigger": "onboarding", "generated_at": (now - datetime.timedelta(days=15)).isoformat()},
-            {"rec_id": 2, "career_id": 1, "fit_score": 72.0, "rank": 1, "trigger": "profile_update", "generated_at": (now - datetime.timedelta(days=7)).isoformat()},
-            {"rec_id": 3, "career_id": 1, "fit_score": 83.4, "rank": 1, "trigger": "manual", "generated_at": now.isoformat()}
-        ]
 
     return {
         "skill_progress": skill_progress,
@@ -214,84 +210,4 @@ async def get_skill_demand_trends(
         "demand_forecast": demand_forecast,
         "spike_alerts": spike_alerts,
         "trend_data": trend_data
-    }
-
-@router.get("/cohort")
-async def get_cohort_analytics(
-    cohort: Optional[int] = Query(default=None),
-    career: Optional[str] = Query(default=None),
-    current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
-):
-    """
-    Administrative cohort placement statistics, average months-to-hire,
-    and geographic employment densities. (Admin Auth strictly enforced)
-    """
-    # 1. Enforce RBAC validation
-    if current_user.role != "admin":
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Administrative privilege is required to access cohort telemetry."
-        )
-
-    # 2. Extract cohort filters
-    conditions = []
-    if cohort:
-        conditions.append(UserProfile.graduation_year == cohort)
-
-    # 3. Analyze relational placement rates
-    # Fetch active students matching cohort criteria
-    stmt_students = (
-        select(User.user_id, UserProfile.graduation_year, UserProfile.preferred_work_mode, UserProfile.city)
-        .join(UserProfile, User.user_id == UserProfile.user_id)
-        .where(and_(*conditions))
-    )
-    res_students = await db.execute(stmt_students)
-    students = res_students.all()
-    
-    total_students = len(students)
-    if total_students == 0:
-        # Fallback values to prevent empty administrative panels in test spaces
-        total_students = 120
-        placed_count = 94
-        avg_time = 4.2
-        city_densities = {"Bangalore": 45, "Hyderabad": 30, "Mumbai": 15, "Remote": 30}
-    else:
-        # Check Job Applications for placement outcomes
-        student_ids = [s.user_id for s in students]
-        stmt_apps = select(JobApplication).where(
-            JobApplication.user_id.in_(student_ids),
-            JobApplication.status == "offered"
-        )
-        res_apps = await db.execute(stmt_apps)
-        offered_apps = res_apps.scalars().all()
-        placed_count = len(offered_apps)
-
-        # Average time calculation (based on cohort graduation metrics)
-        avg_time = round(random.uniform(3.5, 4.8), 1)
-
-        # Calculate city densities
-        city_counts = {}
-        for s in students:
-            c = s.city if s.city else "Remote"
-            city_counts[c] = city_counts.get(c, 0) + 1
-        city_densities = city_counts
-
-    placement_rate = round((placed_count / total_students) * 100.0, 2) if total_students > 0 else 0.0
-
-    return {
-        "cohort_cohort_year": cohort or 2025,
-        "career_focus": career or "All Roles",
-        "cohort_metrics": {
-            "total_size": total_students,
-            "placed_students": placed_count,
-            "placement_rate_pct": placement_rate,
-            "avg_time_to_hire_months": avg_time
-        },
-        "geographic_density": city_densities,
-        "employment_modes": {
-            "remote": int(placed_count * 0.4),
-            "onsite": int(placed_count * 0.45),
-            "hybrid": int(placed_count * 0.15)
-        }
     }

@@ -26,9 +26,13 @@ class UserMeUpdatePayload(BaseModel):
     expected_salary_min: Optional[int] = None
     linkedin_url: Optional[str] = None
     github_url: Optional[str] = None
+    career_interests: Optional[List[str]] = None
+    expected_salary: Optional[int] = None
+
 
 class UserSkillAddPayload(BaseModel):
-    skill_id: int
+    skill_id: Optional[int] = None
+    custom_skill_name: Optional[str] = None
     proficiency_level: str = Field(..., description="beginner, intermediate, advanced, expert")
     years_experience: Optional[float] = Field(default=0.0, ge=0.0)
 
@@ -126,6 +130,10 @@ async def update_me(
         profile.graduation_year = payload.graduation_year
     if payload.expected_salary_min is not None:
         profile.expected_salary_min = payload.expected_salary_min
+    if payload.expected_salary is not None:
+        profile.expected_salary_min = payload.expected_salary
+    if payload.career_interests is not None:
+        profile.career_interests = {"interests": payload.career_interests}
     if payload.linkedin_url is not None:
         profile.linkedin_url = payload.linkedin_url
     if payload.github_url is not None:
@@ -141,20 +149,68 @@ async def add_user_skill(
     db: AsyncSession = Depends(get_db)
 ):
     """Add a skill to the user's profile. Returns 409 if already present."""
-    # 1. Verify skill exists in taxonomy
-    skill_stmt = select(Skill).where(Skill.skill_id == payload.skill_id)
-    skill_res = await db.execute(skill_stmt)
-    skill = skill_res.scalar_one_or_none()
-    if not skill:
+    skill = None
+    
+    if payload.skill_id is not None:
+        # 1. Verify skill exists in taxonomy by ID
+        skill_stmt = select(Skill).where(Skill.skill_id == payload.skill_id)
+        skill_res = await db.execute(skill_stmt)
+        skill = skill_res.scalar_one_or_none()
+        if not skill:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Skill ID does not exist in standard taxonomy."
+            )
+    elif payload.custom_skill_name:
+        # Check if the custom skill name already exists (case-insensitive check)
+        from sqlalchemy import func
+        clean_name = payload.custom_skill_name.strip()
+        if not clean_name:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Custom skill name cannot be empty."
+            )
+        skill_stmt = select(Skill).where(func.lower(Skill.skill_name) == func.lower(clean_name))
+        skill_res = await db.execute(skill_stmt)
+        skill = skill_res.scalar_one_or_none()
+        
+        if not skill:
+            # Create a new skill in taxonomy
+            import re
+            slug = re.sub(r'[^\w\s-]', '', clean_name.lower())
+            slug = re.sub(r'[-\s]+', '-', slug).strip('-')
+            
+            # Ensure slug uniqueness in database
+            base_slug = slug
+            slug_counter = 1
+            while True:
+                slug_check_stmt = select(Skill).where(Skill.skill_slug == slug)
+                slug_check_res = await db.execute(slug_check_stmt)
+                if not slug_check_res.scalar_one_or_none():
+                    break
+                slug = f"{base_slug}-{slug_counter}"
+                slug_counter += 1
+                
+            skill = Skill(
+                skill_name=clean_name,
+                skill_slug=slug,
+                category="technical",
+                domain="General",
+                market_demand_score=50.0,
+                is_trending=False
+            )
+            db.add(skill)
+            await db.flush() # Obtain skill.skill_id
+    else:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Skill ID does not exist in standard taxonomy."
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Either skill_id or custom_skill_name must be provided."
         )
 
     # 2. Check if mapping already exists
     existing_stmt = select(UserSkill).where(
         UserSkill.user_id == current_user.user_id,
-        UserSkill.skill_id == payload.skill_id
+        UserSkill.skill_id == skill.skill_id
     )
     existing_res = await db.execute(existing_stmt)
     existing = existing_res.scalar_one_or_none()
@@ -170,7 +226,7 @@ async def add_user_skill(
 
     new_mapping = UserSkill(
         user_id=current_user.user_id,
-        skill_id=payload.skill_id,
+        skill_id=skill.skill_id,
         proficiency_level=proficiency,
         years_of_experience=payload.years_experience or 0.0,
         source="self"
@@ -230,3 +286,45 @@ async def upload_avatar(
     # Simulated static path storage return
     avatar_url = f"/static/avatars/user_{current_user.user_id}{ext}"
     return {"avatar_url": avatar_url}
+
+@router.get("/skills/search")
+async def search_skills(
+    q: str = "",
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Search canonical skill taxonomy using a prefix keyword query.
+    """
+    from app.repositories.skill_repo import SkillRepository
+    repo = SkillRepository(db)
+    skills = await repo.autocomplete_skills(q, limit=10)
+    return [
+        {
+            "skill_id": s.skill_id,
+            "skill_name": s.skill_name,
+            "skill_slug": s.skill_slug,
+            "category": s.category
+        }
+        for s in skills
+    ]
+
+class PasswordChangePayload(BaseModel):
+    current_password: str
+    new_password: str
+
+@router.post("/me/password")
+async def change_password(
+    payload: PasswordChangePayload,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Change current user's password securely."""
+    from app.core.security import verify_password, get_password_hash
+    if not verify_password(payload.current_password, current_user.password_hash):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Incorrect current password."
+        )
+    current_user.password_hash = get_password_hash(payload.new_password)
+    await db.commit()
+    return {"message": "Password changed successfully."}

@@ -1,15 +1,32 @@
+# Android Gradle and project build outputs
+.gradle/
+build/
+app/build/
+captures/
+.externalNativeBuild/
+.cxx/
+output.json
+
+# Android Studio IDE files
+.idea/
 *.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+*.ipr
+*.iws
+.navigation/
+
+# Local configuration files
 local.properties
+signing.properties
+secrets.properties
+
+# Keystores & credentials (NEVER commit these)
+*.jks
+*.keystore
+*.p12
+
+# OS & temporary files
+.DS_Store
+Thumbs.db
+*.log
+*.bak
+*.tmp

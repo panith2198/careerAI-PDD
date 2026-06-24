@@ -9,8 +9,12 @@ class Job(Base):
     
     job_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     external_id: Mapped[Optional[str]] = mapped_column(String(100), unique=True, nullable=True)
+    job_url: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
+    job_url_direct: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
     title: Mapped[str] = mapped_column(String(200), nullable=False)
     company_name: Mapped[str] = mapped_column(String(200), nullable=False)
+    company_url: Mapped[Optional[str]] = mapped_column(String(300), nullable=True)
+    company_logo_url: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
     career_id: Mapped[Optional[int]] = mapped_column(Integer, ForeignKey("careers.career_id", ondelete="SET NULL"), nullable=True)
     
     description_raw: Mapped[str] = mapped_column(String, nullable=False)
@@ -20,12 +24,17 @@ class Job(Base):
         Enum("remote", "onsite", "hybrid", name="job_work_mode_enum"), 
         nullable=False
     )
+    job_type: Mapped[Optional[str]] = mapped_column(
+        Enum("fulltime", "parttime", "internship", "contract", name="job_type_enum"),
+        nullable=True
+    )
     experience_min_months: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     salary_min: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
     salary_max: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    currency: Mapped[Optional[str]] = mapped_column(String(10), default="INR", nullable=True)
     
     source: Mapped[str] = mapped_column(
-        Enum("linkedin", "naukri", "indeed", "internal", "manual", name="job_source_enum"), 
+        Enum("linkedin", "naukri", "indeed", "zip_recruiter", "google", "glassdoor", "internal", "manual", name="job_source_enum"), 
         nullable=False
     )
     is_fresher_eligible: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)

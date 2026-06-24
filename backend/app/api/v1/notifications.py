@@ -83,10 +83,10 @@ async def list_notifications(
             ),
             Notification(
                 user_id=current_user.user_id,
-                type="mentor",
-                title="Upcoming Session Scheduled",
-                message="Your mentoring session with Dr. Eswar has been scheduled for tomorrow at 10 AM.",
-                action_url="/mentor",
+                type="system",
+                title="Upcoming System Update",
+                message="A new platform upgrade is scheduled for this weekend. Stay tuned!",
+                action_url="/dashboard",
                 is_read=True,
                 channel="in_app",
                 created_at=now - datetime.timedelta(days=2)

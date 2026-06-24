@@ -6,7 +6,6 @@ from app.models.result import AssessmentResult
 from app.models.roadmap import Roadmap
 from app.models.job import Job, RagDocument
 from app.models.application import JobApplication
-from app.models.mentor import Mentor
 from app.models.notification import Notification
 from app.models.audit_log import AuditLog
 from app.models.otp import UserOTP
@@ -27,10 +26,10 @@ __all__ = [
     "Job",
     "RagDocument",
     "JobApplication",
-    "Mentor",
     "Notification",
     "AuditLog",
     "UserOTP",
     "ChatSession",
     "ChatMessage",
 ]
+

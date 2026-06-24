@@ -331,7 +331,6 @@ class NotificationsFragment : Fragment() {
                 "job" -> findNavController().navigate(R.id.navigation_job_detail)
                 "roadmap" -> findNavController().navigate(R.id.navigation_roadmap)
                 "assessment" -> findNavController().navigate(R.id.navigation_result)
-                "mentor" -> findNavController().navigate(R.id.navigation_mentor)
                 "analytics" -> findNavController().navigate(R.id.navigation_analytics)
                 else -> { /* No navigation for system or typeless notifications */ }
             }

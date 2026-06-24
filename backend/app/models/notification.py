@@ -11,7 +11,7 @@ class Notification(Base):
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.user_id", ondelete="CASCADE"), nullable=False)
     
     type: Mapped[str] = mapped_column(
-        Enum("system", "job_match", "roadmap", "assessment", "mentor", "ai_tip", name="notification_type_enum"), 
+        Enum("system", "job_match", "roadmap", "assessment", "ai_tip", name="notification_type_enum"), 
         nullable=False
     )
     title: Mapped[str] = mapped_column(String(200), nullable=False)

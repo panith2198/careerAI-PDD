@@ -15,7 +15,7 @@ class User(Base):
     full_name: Mapped[str] = mapped_column(String(120), nullable=False)
     
     role: Mapped[str] = mapped_column(
-        Enum("student", "mentor", "admin", name="user_role_enum"), 
+        Enum("student", name="user_role_enum"), 
         default="student", 
         nullable=False
     )
@@ -49,11 +49,11 @@ class User(Base):
     assessment_results: Mapped[List["AssessmentResult"]] = relationship("AssessmentResult", back_populates="user", cascade="all, delete-orphan")
     roadmaps: Mapped[List["Roadmap"]] = relationship("Roadmap", back_populates="user", cascade="all, delete-orphan")
     applications: Mapped[List["JobApplication"]] = relationship("JobApplication", back_populates="user", cascade="all, delete-orphan")
-    mentor_profile: Mapped[Optional["Mentor"]] = relationship("Mentor", back_populates="user", uselist=False, cascade="all, delete-orphan")
     recommendations: Mapped[List["CareerRecommendation"]] = relationship("CareerRecommendation", back_populates="user", cascade="all, delete-orphan")
     notifications: Mapped[List["Notification"]] = relationship("Notification", back_populates="user", cascade="all, delete-orphan")
     audit_logs: Mapped[List["AuditLog"]] = relationship("AuditLog", back_populates="user", cascade="all, delete-orphan")
     chat_sessions: Mapped[List["ChatSession"]] = relationship("ChatSession", back_populates="user", cascade="all, delete-orphan")
+
 
 
 class UserProfile(Base):

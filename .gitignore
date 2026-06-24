@@ -1,0 +1,63 @@
+# ====================================================================
+# CareerAI Master .gitignore
+# Prevents commiting localized build assets, secrets, and IDE data
+# ====================================================================
+
+# OS generated files
+.DS_Store
+.DS_Store?
+ehthumbs.db
+Icon?
+Thumbs.db
+
+# Generic logs and temporary files
+*.log
+*.bak
+*.tmp
+*.temp
+*~
+
+# IDE configurations
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# Python environment and caches
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Node/Web environments and builds
+node_modules/
+dist/
+dist-ssr/
+npm-debug.log*
+
+# Android build outputs and caches
+.gradle/
+build/
+app/build/
+local.properties
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Environment files and credentials
+.env
+.env.local
+.env.*.local
+*.keystore
+*.jks
+
+# Local database storage or SQLite instances
+database/vector_data/
+backend/storage/resumes/
+backend/storage/user_uploads/
+backend/storage/kb/

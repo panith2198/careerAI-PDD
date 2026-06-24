@@ -1,6 +1,6 @@
 from app.schemas.user_schema import (
     Token, TokenData, LoginRequest, UserCreate, UserResponse,
-    UserProfileUpdate, UserProfileResponse, UserSkillDeclaration, UserSkillResponse, MentorResponse
+    UserProfileUpdate, UserProfileResponse, UserSkillDeclaration, UserSkillResponse
 )
 from app.schemas.career_schema import (
     CareerBase, CareerResponse, CareerRecommendationResponse, CareerPath

@@ -18,10 +18,9 @@ class LocalEmbedder:
 
         model = model_manager.load_model("embeddings")
         
-        # 1. Fallback when model framework is unconfigured
+        # 1. Fail when model framework is unconfigured
         if not model or model == "fallback":
-            logger.warning("Local Embedder in fallback mode. Returning mock 384-dim arrays.")
-            return [[0.01 * j] * 384 for j in range(len(texts))]
+            raise ValueError("Local Embedder model framework is unconfigured.")
 
         # 2. Generate vector embeddings
         try:
@@ -30,7 +29,7 @@ class LocalEmbedder:
             return [emb.tolist() for emb in embeddings]
         except Exception as e:
             logger.error(f"Local embedding generation failed: {e}")
-            return [[0.0] * 384 for _ in range(len(texts))]
+            raise e
 
     @classmethod
     def get_embedding(cls, text: str) -> List[float]:

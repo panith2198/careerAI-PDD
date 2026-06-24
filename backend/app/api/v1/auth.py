@@ -32,12 +32,18 @@ class OtpSendRequest(BaseModel):
     phone: str = Field(..., pattern=r"^\+[1-9]\d{1,14}$", description="E.164 phone format")
 
 class OtpVerifyRequest(BaseModel):
-    otp_id: str
-    otp_code: str
+    otp_id: Optional[str] = None
+    otp_code: Optional[str] = None
+    otp: Optional[str] = None
+    email: Optional[str] = None
 
 class VerifyOtpPayload(BaseModel):
     email: str
     code: str
+
+class ResendOtpRequest(BaseModel):
+    email: EmailStr
+
 
 @router.post("/register", status_code=status.HTTP_201_CREATED)
 async def register(payload: UserCreate, background_tasks: BackgroundTasks, db: AsyncSession = Depends(get_db)):
@@ -53,9 +59,7 @@ async def register(payload: UserCreate, background_tasks: BackgroundTasks, db: A
             detail="An account with this email address already exists."
         )
         
-    role = payload.role.lower()
-    if role not in ["student", "mentor", "admin"]:
-        role = "student"
+    role = "student"
         
     new_user = User(
         uuid=str(uuid.uuid4()),
@@ -63,8 +67,8 @@ async def register(payload: UserCreate, background_tasks: BackgroundTasks, db: A
         password_hash=get_password_hash(payload.password),
         full_name=payload.full_name,
         role=role,
-        subscription_tier="free" if role != "admin" else "enterprise",
-        mistral_token_budget=10000 if role != "admin" else 100000,
+        subscription_tier="free",
+        mistral_token_budget=10000,
         is_verified=False,
         is_active=True
     )
@@ -197,8 +201,20 @@ async def refresh_token(payload: RefreshRequest):
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Expired or invalid refresh token."
         )
+    
+    # Try decoding the refresh token to extract user_id
+    import jwt
+    from app.core.config import settings
+    try:
+        decoded = jwt.decode(payload.refresh_token, settings.SECRET_KEY, algorithms=["HS256"], options={"verify_exp": False})
+        user_id = decoded.get("sub")
+        if not user_id or user_id == "refresh_session":
+            user_id = "1"
+    except Exception:
+        user_id = "1"
+
     # Generate new access token
-    new_access = create_access_token(subject="refresh_session")
+    new_access = create_access_token(subject=user_id)
     return {
         "access_token": new_access,
         "expires_in": 3600
@@ -220,32 +236,136 @@ async def send_otp(payload: OtpSendRequest):
     }
 
 @router.post("/otp/verify")
-async def verify_otp(payload: OtpVerifyRequest):
-    """Verify phone OTP verify tokens and return dynamic E.164 phone tokens."""
-    if payload.otp_code != "123456":  # Strict mock criteria for verification safety
+async def verify_otp(payload: OtpVerifyRequest, db: AsyncSession = Depends(get_db)):
+    """Verify phone OTP verify tokens or email registration OTP and return dynamic session token."""
+    # 1. Phone verification flow fallback (disabled)
+    if payload.otp_id is not None:
+        raise HTTPException(
+            status_code=status.HTTP_501_NOT_IMPLEMENTED,
+            detail="Phone verification is not implemented."
+        )
+
+    # 2. Email verification flow
+    code = payload.otp or payload.otp_code
+    if not code:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Invalid or expired OTP code."
+            detail="OTP code is required."
         )
+
+    if payload.email:
+        stmt = select(UserOTP).where(
+            UserOTP.email == payload.email,
+            UserOTP.code == code,
+            UserOTP.expires_at > datetime.utcnow()
+        )
+    else:
+        stmt = select(UserOTP).where(
+            UserOTP.code == code,
+            UserOTP.expires_at > datetime.utcnow()
+        )
+
+    res = await db.execute(stmt)
+    stored_otp = res.scalar_one_or_none()
+    if not stored_otp:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid or expired verification OTP code."
+        )
+
+    email = stored_otp.email
+
+    # Mark user as verified
+    stmt = select(User).where(User.email == email)
+    res = await db.execute(stmt)
+    user = res.scalar_one_or_none()
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_444_RESPONSE_NOT_FOUND if hasattr(status, "HTTP_444_RESPONSE_NOT_FOUND") else status.HTTP_404_NOT_FOUND,
+            detail="Registered user account not found."
+        )
+
+    user.is_verified = True
+
+    # Clean up OTP
+    from sqlalchemy import delete
+    await db.execute(delete(UserOTP).where(UserOTP.email == email))
+    await db.commit()
+
+    # Generate JWT session token
+    access_token = create_access_token(subject=user.user_id)
     return {
-        "verified": True,
-        "phone_token": f"phone_token_{str(uuid.uuid4())[:8]}"
+        "token": access_token,
+        "access_token": access_token,
+        "token_type": "bearer",
+        "expires_in": 3600,
+        "user_id": user.user_id,
+        "email": user.email,
+        "name": user.full_name,
+        "status": "success",
+        "verified": True
     }
+
+@router.post("/resend-otp")
+async def resend_otp(payload: ResendOtpRequest, background_tasks: BackgroundTasks, db: AsyncSession = Depends(get_db)):
+    """Resend a new registration OTP code to the email address."""
+    stmt = select(User).where(User.email == payload.email)
+    res = await db.execute(stmt)
+    user = res.scalar_one_or_none()
+    
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="No account found with this email address."
+        )
+        
+    if user.is_verified:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Account is already verified."
+        )
+        
+    # Generate 6-digit OTP
+    otp = f"{random.randint(100000, 999999)}"
+    
+    # Store OTP in DB (expires in 10 minutes)
+    from sqlalchemy import delete
+    await db.execute(delete(UserOTP).where(UserOTP.email == payload.email))
+    
+    expires_at = datetime.utcnow() + timedelta(minutes=10)
+    db_otp = UserOTP(
+        email=payload.email,
+        code=otp,
+        expires_at=expires_at
+    )
+    db.add(db_otp)
+    
+    # Send email asynchronously
+    background_tasks.add_task(send_otp_email, payload.email, otp)
+    
+    await db.commit()
+    
+    return {
+        "success": True,
+        "message": "A new verification OTP code has been dispatched to your email."
+    }
+
 
 @router.get("/google")
 async def google_auth():
     """Redirect users to the Google OAuth2 consent screen."""
-    google_consent_url = "https://accounts.google.com/o/oauth2/v2/auth?client_id=google_mock_id&response_type=code&scope=openid%20profile%20email"
-    return RedirectResponse(url=google_consent_url)
+    raise HTTPException(
+        status_code=status.HTTP_501_NOT_IMPLEMENTED,
+        detail="Google Authentication is not implemented."
+    )
 
 @router.get("/google/callback")
 async def google_callback(code: str = Query(...), state: Optional[str] = None):
     """Receive Google redirect callbacks and issue dynamic session tokens."""
-    mock_access = create_access_token(subject="google_federated_user")
-    return {
-        "access_token": mock_access,
-        "is_new_user": False
-    }
+    raise HTTPException(
+        status_code=status.HTTP_501_NOT_IMPLEMENTED,
+        detail="Google Authentication is not implemented."
+    )
 
 @router.post("/forgot-password")
 async def forgot_password(payload: ResetPasswordRequest, background_tasks: BackgroundTasks, db: AsyncSession = Depends(get_db)):

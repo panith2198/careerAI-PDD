@@ -39,6 +39,12 @@ async def upload_resume(
             detail="File size exceeds the maximum limit of 10MB."
         )
         
+    # Save the file permanently to static disk storage
+    os.makedirs("storage/resumes", exist_ok=True)
+    dest_path = os.path.join("storage/resumes", f"{current_user.uuid}_{file.filename}")
+    with open(dest_path, "wb") as f:
+        f.write(contents)
+        
     # Save base Resume entry into the database with pending state
     new_resume = Resume(
         user_id=current_user.user_id,
@@ -126,6 +132,8 @@ async def get_resume_status(
             detail="Resume not found or access denied."
         )
         
+
+
     return {
         "status": resume.parse_status,
         "ats_score": float(resume.ats_score) if resume.ats_score is not None else None,
@@ -155,7 +163,15 @@ async def get_resume_details(
             detail=f"Resume is currently in '{resume.parse_status}' state."
         )
         
-    return resume.structured_json
+    return {
+        "resume_id": resume.resume_id,
+        "file_url": resume.file_url,
+        "ats_score": float(resume.ats_score) if resume.ats_score is not None else None,
+        "skills_extracted": resume.skills_extracted,
+        "structured_json": resume.structured_json,
+        "parse_status": resume.parse_status,
+        "created_at": resume.created_at.isoformat()
+    }
 
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_resume(

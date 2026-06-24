@@ -288,6 +288,7 @@ async def request_roadmap_generation(
 @router.get("/list")
 async def list_user_roadmaps(
     status: Optional[str] = Query(default=None),
+    career_id: Optional[int] = Query(default=None),
     page: int = Query(default=1, ge=1),
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
@@ -299,6 +300,8 @@ async def list_user_roadmaps(
     conditions = [Roadmap.user_id == current_user.user_id]
     if status:
         conditions.append(Roadmap.status == status)
+    if career_id:
+        conditions.append(Roadmap.career_id == career_id)
         
     count_stmt = select(func.count(Roadmap.roadmap_id)).where(and_(*conditions))
     count_res = await db.execute(count_stmt)
@@ -350,6 +353,7 @@ async def get_roadmap_details(
         
     return {
         "roadmap_id": roadmap.roadmap_id,
+        "career_id": roadmap.career_id,
         "title": roadmap.title,
         "total_weeks": roadmap.total_weeks,
         "hours_per_week": roadmap.hours_per_week,

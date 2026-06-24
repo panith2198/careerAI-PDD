@@ -11,7 +11,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 from main import app
 from app.core.database import get_db
 from app.api.v1.deps import get_current_user
-from app.models import User, Career, Skill, UserSkill, UserProfile, Resume, Roadmap, Job, JobApplication, Mentor, Notification
+from app.models import User, Career, Skill, UserSkill, UserProfile, Resume, Roadmap, Job, JobApplication, Notification
 
 # ==========================================
 # Mock Dependencies for Bulletproof Testing
@@ -42,13 +42,19 @@ class MockDbSession:
         return MockResult()
 
     def add(self, obj):
-        pass
+      pass
+
+    def add_all(self, objs):
+      pass
+
+    async def commit(self):
+      pass
 
     async def flush(self):
-        pass
+      pass
 
     async def delete(self, obj):
-        pass
+      pass
 
 async def mock_get_db():
     yield MockDbSession()
@@ -76,8 +82,10 @@ async def mock_get_current_user_admin():
     )
 
 # Inject overrides
+from app.api.v1.rag import get_current_user_from_token_or_query
 app.dependency_overrides[get_db] = mock_get_db
 app.dependency_overrides[get_current_user] = mock_get_current_user
+app.dependency_overrides[get_current_user_from_token_or_query] = mock_get_current_user
 
 client = TestClient(app)
 
@@ -173,14 +181,6 @@ run_test("POST", "/api/v1/jobs/1/apply", {"resume_id": 1, "cover_note": "Interes
 run_test("POST", "/api/v1/jobs/1/save", expected_codes=[201, 404, 409])
 run_test("DELETE", "/api/v1/jobs/1/save", expected_codes=[204, 404])
 
-# --- 7.10 Mentors Advising ---
-run_test("GET", "/api/v1/mentors/list")
-run_test("GET", "/api/v1/mentors/1", expected_codes=[200, 404])
-run_test("POST", "/api/v1/mentors/session/book", {"mentor_id": 1, "slot_timestamp": "2026-05-28T14:00:00Z"}, expected_codes=[201, 404])
-run_test("GET", "/api/v1/mentors/session/history")
-app.dependency_overrides[get_current_user] = mock_get_current_user_admin
-run_test("PUT", "/api/v1/mentors/availability", {"availability_json": {"monday": ["09:00-10:00"]}}, expected_codes=[200, 403, 404])
-app.dependency_overrides[get_current_user] = mock_get_current_user
 
 # --- 7.11 Notifications ---
 run_test("GET", "/api/v1/notifications/list")
@@ -191,9 +191,6 @@ run_test("DELETE", "/api/v1/notifications/1", expected_codes=[204, 404])
 # --- 7.9 Analytics ---
 run_test("GET", "/api/v1/analytics/dashboard")
 run_test("GET", "/api/v1/analytics/skills/trend")
-app.dependency_overrides[get_current_user] = mock_get_current_user_admin
-run_test("GET", "/api/v1/analytics/cohort")
-app.dependency_overrides[get_current_user] = mock_get_current_user
 
 # Write detailed checks summary into checks.md
 checks_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../checks.md"))

@@ -1,0 +1,208 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/inter";
+
+@custom-variant dark (&:is(.dark *));
+@custom-variant light (&:is(.light *));
+
+@theme inline {
+    --font-heading: 'Space Grotesk', sans-serif;
+    --font-sans: 'DM Sans', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+
+    --animate-spin-slow: spin 12s linear infinite;
+    --animate-pulse-subtle: pulse-subtle 3s ease-in-out infinite;
+
+    @keyframes pulse-subtle {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.8; }
+    }
+    
+    --color-surface-1: var(--surface-1);
+    --color-surface-2: var(--surface-2);
+    --color-surface-3: var(--surface-3);
+    --color-surface-4: var(--surface-4);
+    --color-surface-glass: var(--surface-glass);
+    --color-surface-glass-strong: var(--surface-glass-strong);
+    
+    --color-primary-glow: var(--primary-glow);
+    --color-primary-muted: var(--primary-muted);
+    --color-primary-dim: var(--primary-dim);
+    --color-primary-dim-strong: var(--primary-dim-strong);
+    
+    --color-cyan-brand: var(--cyan-brand);
+    --color-cyan-dim: var(--cyan-dim);
+    --color-cyan-border: var(--cyan-border);
+    
+    --color-emerald-brand: var(--emerald-brand);
+    --color-emerald-dim: var(--emerald-dim);
+    --color-rose-brand: var(--rose-brand);
+    --color-rose-dim: var(--rose-dim);
+    
+    --color-violet-warning: var(--violet-warning);
+    --color-violet-warning-dim: var(--violet-warning-dim);
+    --color-text-violet: var(--text-violet);
+    
+    --color-border-medium: var(--border-medium);
+    --color-border-strong: var(--border-strong);
+    --color-border-violet: var(--border-violet);
+    --color-divider-brand: var(--divider-brand);
+    
+    --color-ring: var(--ring);
+    --color-input: var(--input);
+    --color-border: var(--border);
+    --color-destructive: var(--destructive);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-accent: var(--accent);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-muted: var(--muted);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-secondary: var(--secondary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-primary: var(--primary);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-popover: var(--popover);
+    --color-card-foreground: var(--card-foreground);
+    --color-card: var(--card);
+    --color-foreground: var(--foreground);
+    --color-background: var(--background);
+    
+    --radius-sm: calc(var(--radius) * 0.6);
+    --radius-md: calc(var(--radius) * 0.8);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) * 1.4);
+    --radius-2xl: calc(var(--radius) * 1.8);
+    --radius-3xl: calc(var(--radius) * 2.2);
+    --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+    /* DEFAULT THEME: DARK-FIRST (as per design.md) */
+    --background: #060608;
+    --foreground: #EEEAF8;
+    --card: #161525;
+    --card-foreground: #EEEAF8;
+    --popover: #1E1B2E;
+    --popover-foreground: #EEEAF8;
+    --primary: #8B5CF6;
+    --primary-foreground: #FFFFFF;
+    --secondary: #1E1B2E;
+    --secondary-foreground: #EEEAF8;
+    --muted: #1E1B2E;
+    --muted-foreground: #9D99B8;
+    --accent: rgba(109, 40, 217, 0.15);
+    --accent-foreground: #C4B5FD;
+    --destructive: #F43F5E;
+    --destructive-foreground: #FFFFFF;
+    --border: rgba(255, 255, 255, 0.06);
+    --input: rgba(255, 255, 255, 0.1);
+    --ring: #8B5CF6;
+    
+    --chart-1: #8B5CF6;
+    --chart-2: #22D3EE;
+    --chart-3: #10B981;
+    --chart-4: #C4B5FD;
+    --chart-5: #4C1D95;
+    
+    --radius: 0.625rem;
+    
+    /* Specific tokens from design.md */
+    --surface-1: #0F0F1C;
+    --surface-2: #161525;
+    --surface-3: #1E1B2E;
+    --surface-4: #2D2A42;
+    --surface-glass: rgba(255, 255, 255, 0.03);
+    --surface-glass-strong: rgba(255, 255, 255, 0.08);
+    
+    --primary-glow: #A78BFA;
+    --primary-muted: #4C1D95;
+    --primary-dim: rgba(109, 40, 217, 0.15);
+    --primary-dim-strong: rgba(139, 92, 246, 0.2);
+    
+    --cyan-brand: #22D3EE;
+    --cyan-dim: rgba(34, 211, 238, 0.1);
+    --cyan-border: rgba(34, 211, 238, 0.2);
+    
+    --emerald-brand: #10B981;
+    --emerald-dim: rgba(16, 185, 129, 0.125);
+    
+    --rose-brand: #F43F5E;
+    --rose-dim: rgba(244, 63, 94, 0.125);
+    
+    --violet-warning: #7C3AED;
+    --violet-warning-dim: rgba(124, 58, 237, 0.15);
+    
+    --text-violet: #C4B5FD;
+    --border-medium: rgba(255, 255, 255, 0.1);
+    --border-strong: rgba(255, 255, 255, 0.15);
+    --border-violet: rgba(139, 92, 246, 0.19);
+    --divider-brand: rgba(255, 255, 255, 0.03);
+
+    --sidebar: #0F0F1C;
+    --sidebar-foreground: #EEEAF8;
+    --sidebar-primary: #8B5CF6;
+    --sidebar-primary-foreground: #FFFFFF;
+    --sidebar-accent: rgba(255, 255, 255, 0.03);
+    --sidebar-accent-foreground: #C4B5FD;
+    --sidebar-border: rgba(255, 255, 255, 0.06);
+    --sidebar-ring: #8B5CF6;
+}
+
+/* LIGHT THEME DISCARDED - PLATFORM IS STABLE DARK-FIRST */
+
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+
+  /* Custom WebKit scrollbars */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--background);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--surface-4);
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-glow);
+  }
+
+  /* Custom WebKit scrollbar class for scrollable containers */
+  .scrollbar-custom::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .scrollbar-custom::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-custom::-webkit-scrollbar-thumb {
+    background: var(--input);
+    border-radius: 9999px;
+  }
+  .scrollbar-custom::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-glow);
+  }
+
+  /* Firefox support */
+  .scrollbar-custom {
+    scrollbar-width: thin;
+    scrollbar-color: var(--input) transparent;
+  }
+
+  /* Eliminate browser focus outlines on Recharts elements */
+  .recharts-wrapper, .recharts-surface {
+    outline: none !important;
+  }
+}

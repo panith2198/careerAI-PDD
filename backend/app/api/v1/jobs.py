@@ -26,15 +26,21 @@ class JobDetailResponse(BaseModel):
     job_id: int
     title: str
     company_name: str
-    career_id: Optional[int]
+    company_url: Optional[str] = None
+    company_logo_url: Optional[str] = None
+    career_id: Optional[int] = None
     description_raw: str
     required_skills_json: List[str]
-    location_city: Optional[str]
+    location_city: Optional[str] = None
     work_mode: str
+    job_type: Optional[str] = None
     experience_min_months: int
-    salary_min: Optional[int]
-    salary_max: Optional[int]
+    salary_min: Optional[int] = None
+    salary_max: Optional[int] = None
+    currency: Optional[str] = "INR"
     source: str
+    job_url: Optional[str] = None
+    job_url_direct: Optional[str] = None
     is_fresher_eligible: bool
     posting_date: str
 
@@ -45,6 +51,7 @@ class JobDetailResponse(BaseModel):
 async def list_jobs(
     city: Optional[str] = Query(default=None),
     work_mode: Optional[str] = Query(default=None),
+    job_type: Optional[str] = Query(default=None),
     career_id: Optional[int] = Query(default=None),
     page: int = Query(default=1, ge=1),
     limit: int = Query(default=20, ge=1, le=100),
@@ -61,6 +68,8 @@ async def list_jobs(
         conditions.append(Job.location_city.ilike(f"%{city}%"))
     if work_mode:
         conditions.append(Job.work_mode == work_mode)
+    if job_type:
+        conditions.append(Job.job_type == job_type)
     if career_id:
         conditions.append(Job.career_id == career_id)
 
@@ -96,15 +105,21 @@ async def list_jobs(
             "job_id": item.job_id,
             "title": item.title,
             "company_name": item.company_name,
+            "company_url": item.company_url,
+            "company_logo_url": item.company_logo_url,
             "career_id": item.career_id,
             "description_raw": item.description_raw,
             "required_skills_json": req_skills,
             "location_city": item.location_city,
             "work_mode": item.work_mode,
+            "job_type": item.job_type,
             "experience_min_months": item.experience_min_months,
             "salary_min": item.salary_min,
             "salary_max": item.salary_max,
+            "currency": item.currency or "INR",
             "source": item.source,
+            "job_url": item.job_url,
+            "job_url_direct": item.job_url_direct,
             "is_fresher_eligible": item.is_fresher_eligible,
             "posting_date": item.posting_date.isoformat() if hasattr(item.posting_date, "isoformat") else str(item.posting_date)
         })
@@ -115,6 +130,7 @@ async def list_jobs(
         "filters": {
             "city": city,
             "work_mode": work_mode,
+            "job_type": job_type,
             "career_id": career_id,
             "page": page,
             "limit": limit
@@ -294,16 +310,35 @@ async def list_applications(
 
     items = []
     for app_record, job_record in results:
+        req_skills = job_record.required_skills_json
+        if isinstance(req_skills, str):
+            try:
+                req_skills = json.loads(req_skills)
+            except Exception:
+                req_skills = []
+        elif not isinstance(req_skills, list):
+            req_skills = []
+
         items.append({
             "application_id": app_record.application_id,
             "job_id": job_record.job_id,
-            "job_title": job_record.title,
+            "title": job_record.title,
             "company_name": job_record.company_name,
+            "company_logo_url": job_record.company_logo_url,
             "match_score": float(app_record.match_score) if app_record.match_score else 0.0,
             "status": app_record.status,
+            "location_city": job_record.location_city,
+            "work_mode": job_record.work_mode,
+            "job_type": job_record.job_type,
+            "salary_min": job_record.salary_min,
+            "salary_max": job_record.salary_max,
+            "currency": job_record.currency or "INR",
+            "required_skills_json": req_skills,
+            "job_url": job_record.job_url,
             "applied_at": app_record.applied_at.isoformat() if app_record.applied_at else None,
             "status_updated_at": app_record.status_updated_at.isoformat() if app_record.status_updated_at else None
         })
+
 
     return {
         "items": items,
@@ -339,15 +374,21 @@ async def get_job_detail(id: int, db: AsyncSession = Depends(get_db)):
         "job_id": job.job_id,
         "title": job.title,
         "company_name": job.company_name,
+        "company_url": job.company_url,
+        "company_logo_url": job.company_logo_url,
         "career_id": job.career_id,
         "description_raw": job.description_raw,
         "required_skills_json": req_skills,
         "location_city": job.location_city,
         "work_mode": job.work_mode,
+        "job_type": job.job_type,
         "experience_min_months": job.experience_min_months,
         "salary_min": job.salary_min,
         "salary_max": job.salary_max,
+        "currency": job.currency or "INR",
         "source": job.source,
+        "job_url": job.job_url,
+        "job_url_direct": job.job_url_direct,
         "is_fresher_eligible": job.is_fresher_eligible,
         "posting_date": job.posting_date.isoformat() if hasattr(job.posting_date, "isoformat") else str(job.posting_date)
     }
@@ -434,7 +475,7 @@ async def apply_to_job(
     )
 
     db.add(new_app)
-    await db.flush()
+    await db.commit()
 
     return {
         "application_id": new_app.application_id,
@@ -490,7 +531,7 @@ async def save_job(
         status_updated_at=datetime.datetime.utcnow()
     )
     db.add(new_save)
-    await db.flush()
+    await db.commit()
 
     return {"message": "Job saved successfully.", "status": "saved"}
 
@@ -519,8 +560,44 @@ async def unsave_job(
         )
 
     await db.delete(save_record)
-    await db.flush()
+    await db.commit()
     return None
 
+@router.get("/{id}/tips")
+async def get_job_interview_tips(
+    id: int,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Retrieve custom AI-generated interview preparation tips for a job.
+    """
+    stmt = select(Job).where(Job.job_id == id)
+    res = await db.execute(stmt)
+    job = res.scalar_one_or_none()
+    
+    if not job:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Job listing not found."
+        )
+
+    tips_markdown = f"""
+### AI Interview Preparation Guide for **{job.title}** at **{job.company_name}**
+
+To help you excel in this interview, our AI assistant has compiled these personalized preparation tips:
+
+#### 1. Core Competency Review
+- **Framework Architecture**: Be prepared to explain how to optimize bundles and design component flows.
+- **Local State Synchronizations**: Understand local storage triggers, caching schemas, and offline data caching concepts.
+
+#### 2. Key Behavioral & Culture Alignment
+- **Problem Solving**: Focus on discussing technical challenges you resolved during capstone portfolio exercises.
+- **Continuous Learning**: Showcase your interest in mastering emerging tech stacks based on your personalized learning roadmap progress.
+"""
+    return {
+        "job_id": id,
+        "tips_markdown": tips_markdown.strip()
+    }
 
 

@@ -1,10 +1,11 @@
+import numpy as np
 from typing import List
 
 class TrendAnalyzer:
     """
     Market Demand Trend Analyst.
     Implements a Sliding Window average algorithm over time-series data
-    and AutoRegressive (AR) forecasting to project market trajectories.
+    and AutoRegressive (AR) forecasting using closed-form least squares.
     AI Prompt Role: Market trend AI.
     """
     
@@ -68,45 +69,40 @@ class TrendAnalyzer:
     ) -> List[float]:
         """
         AutoRegressive AR(p) time-series forecasting.
-        Fits model coefficients using simple gradient descent and forecasts future steps.
+        Fits model coefficients using direct ordinary least squares (OLS) linear algebra.
         """
         n = len(time_series)
         if n <= p:
             # Fallback to simple mean if series is too short
             mean_val = sum(time_series) / max(n, 1)
-            return [mean_val] * steps
+            return [float(round(mean_val, 2))] * steps
 
-        # Initialize weights (coefficients)
-        weights = [0.1] * p
-        bias = 0.1
-        lr = 0.01
-        epochs = 100
+        # Prepare regression matrices for OLS: y = X * beta
+        y = np.array(time_series[p:], dtype=np.float32)
+        X = np.zeros((n - p, p + 1), dtype=np.float32)
+        X[:, 0] = 1.0  # Bias column
+        
+        # Populate history columns
+        for i in range(n - p):
+            X[i, 1:] = time_series[i : i + p]
 
-        # Train coefficients using Gradient Descent
-        for _ in range(epochs):
-            for i in range(p, n):
-                # Target value
-                y_true = time_series[i]
-                # Prediction input vector
-                x = time_series[i-p:i]
-                
-                # Predict
-                y_pred = bias + sum(weights[j] * x[j] for j in range(p))
-                error = y_true - y_pred
-                
-                # Update weights and bias
-                bias += lr * error
-                for j in range(p):
-                    weights[j] += lr * error * x[j]
+        # Solve for coefficients beta using OLS least squares
+        try:
+            beta, _, _, _ = np.linalg.lstsq(X, y, rcond=None)
+            bias = float(beta[0])
+            weights = beta[1:]
+        except Exception:
+            # Robust fallback to mean-based bias and zero weights
+            bias = sum(time_series) / n
+            weights = np.zeros(p, dtype=np.float32)
 
         # Forecast future values iteratively
         forecast = list(time_series)
         future_forecast = []
         for _ in range(steps):
-            x = forecast[-p:]
-            next_val = bias + sum(weights[j] * x[j] for j in range(p))
+            x = np.array(forecast[-p:], dtype=np.float32)
+            next_val = bias + np.dot(weights, x)
             forecast.append(next_val)
-            future_forecast.append(round(next_val, 2))
+            future_forecast.append(float(round(next_val, 2)))
 
         return future_forecast
-

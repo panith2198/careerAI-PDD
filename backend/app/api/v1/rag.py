@@ -11,13 +11,71 @@ from app.api.v1.deps import get_current_user
 from app.models import User, RagDocument
 from app.core.permissions import verify_rbac_permission
 
+from fastapi.responses import StreamingResponse
+from app.ai_engine.streaming_handler import streaming_handler
+from app.models.chat import ChatSession, ChatMessage
+from fastapi.security import OAuth2PasswordBearer
+import jwt
+from app.core.config import settings
+from app.schemas.schemas import TokenData
+from pydantic import ValidationError
+import json
+import logging
+
 router = APIRouter()
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/login", auto_error=False)
+
+async def get_current_user_from_token_or_query(
+    token: Optional[str] = Depends(oauth2_scheme),
+    token_query: Optional[str] = Query(default=None, alias="token"),
+    db: AsyncSession = Depends(get_db)
+) -> User:
+    actual_token = token or token_query
+    if not actual_token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Authentication token required.",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate login credentials.",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    
+    try:
+        payload = jwt.decode(actual_token, settings.SECRET_KEY, algorithms=["HS256"])
+        user_id: str = payload.get("sub")
+        if user_id is None:
+            raise credentials_exception
+        token_data = TokenData(user_id=int(user_id))
+    except (jwt.PyJWTError, ValidationError, ValueError):
+        raise credentials_exception
+        
+    stmt = select(User).where(User.user_id == token_data.user_id)
+    res = await db.execute(stmt)
+    user = res.scalar_one_or_none()
+    
+    if user is None:
+        raise credentials_exception
+    if not user.is_active:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, 
+            detail="This account has been deactivated."
+        )
+        
+    return user
 
 # Schema definitions for RAG endpoints
 class RagQueryPayload(BaseModel):
-    query: str
+    query: Optional[str] = None
+    message: Optional[str] = None
     collection: Optional[str] = "careers"
     top_k: Optional[int] = 5
+    session_id: Optional[int] = None
+    stream: Optional[bool] = False
 
 class RagEvaluatePayload(BaseModel):
     query: str
@@ -26,13 +84,149 @@ class RagEvaluatePayload(BaseModel):
 @router.post("/query")
 async def query_rag_engine(
     payload: RagQueryPayload,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_user_from_token_or_query),
     db: AsyncSession = Depends(get_db)
 ):
     """
-    Query the unified RAG engine with hybrid search (dense ChromaDB + sparse BM25) 
-    and ms-marco semantic reranker scores.
+    Unified RAG query endpoint. Supports both non-streaming vector search 
+    and real-time SSE chat streaming (when stream=True or message is provided).
     """
+    prompt = payload.message or payload.query
+    if not prompt:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Either query or message must be provided."
+        )
+        
+    # If stream is True, or message is specified (indicating chat composer input), stream response
+    if payload.stream or payload.message is not None:
+        import datetime
+        from fastapi.responses import StreamingResponse
+        from app.models.chat import ChatSession, ChatMessage
+        from app.ai_engine.streaming_handler import streaming_handler
+        import json
+        import logging
+        
+        logger = logging.getLogger("rag_post_stream")
+        
+        # 1. Fetch or create session
+        session_id = payload.session_id
+        if session_id:
+            stmt_session = select(ChatSession).where(
+                ChatSession.session_id == session_id,
+                ChatSession.user_id == current_user.user_id
+            )
+            res_session = await db.execute(stmt_session)
+            session = res_session.scalar_one_or_none()
+            if not session:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail="Specified chat session not found or access denied."
+                )
+        else:
+            stmt_session = (
+                select(ChatSession)
+                .where(ChatSession.user_id == current_user.user_id)
+                .order_by(ChatSession.created_at.desc())
+                .limit(1)
+            )
+            res_session = await db.execute(stmt_session)
+            session = res_session.scalars().first()
+            
+            if not session:
+                session = ChatSession(
+                    user_id=current_user.user_id,
+                    title=f"Chat {datetime.datetime.now().strftime('%Y-%m-%d %H:%M')}"
+                )
+                db.add(session)
+                await db.flush()
+                
+        # 2. Save user message to database
+        user_message = ChatMessage(
+            session_id=session.session_id,
+            is_user=True,
+            message_text=prompt
+        )
+        db.add(user_message)
+        await db.flush()
+        
+        # 3. Retrieve RAG Context
+        stmt = select(RagDocument).where(
+            RagDocument.collection_name == payload.collection,
+            RagDocument.is_active == True
+        ).limit(5)
+        
+        res = await db.execute(stmt)
+        documents = res.scalars().all()
+        
+        sources = []
+        context_chunks = []
+        for doc in documents:
+            sources.append({
+                "doc_id": doc.doc_id,
+                "title": doc.title,
+                "source_type": doc.source_type,
+                "content": doc.chunk_text,
+                "source_path": doc.source_path
+            })
+            context_chunks.append(doc.chunk_text)
+            
+        context_block = "\n---\n".join(context_chunks) if context_chunks else ""
+        
+        system_prompt = (
+            "You are an expert AI career guidance counselor for the CareerAI platform. "
+            "Answer user questions about careers, skills, salaries, learning paths, and job markets. "
+            "Be concise, specific, and helpful. Use data from the knowledge base context when available. "
+            "Always give actionable, practical advice."
+        )
+        
+        user_prompt = prompt
+        if context_block:
+            user_prompt = (
+                f"Knowledge Base Context:\n{context_block}\n\n"
+                f"User Question: {prompt}\n\n"
+                f"Provide a helpful, concise answer using the context above when relevant."
+            )
+            
+        # 4. Define async generator for SSE response streaming
+        async def event_generator():
+            accumulated_text = []
+            try:
+                async for token_msg in streaming_handler.stream_completion(user_prompt, system_prompt):
+                    yield token_msg
+                    
+                    # Extract text for DB persistence
+                    if token_msg.startswith("data: "):
+                        data_str = token_msg[6:].strip()
+                        if data_str != "[DONE]":
+                            try:
+                                chunk = json.loads(data_str)
+                                token = chunk.get("text", "")
+                                if token:
+                                    accumulated_text.append(token)
+                            except Exception:
+                                pass
+                
+                # Save complete response once generator finishes
+                full_response = "".join(accumulated_text)
+                if full_response:
+                    ai_message = ChatMessage(
+                        session_id=session.session_id,
+                        is_user=False,
+                        message_text=full_response,
+                        confidence=0.95 if context_chunks else 0.85,
+                        sources_json=sources if sources else None,
+                        model_used="mistral-large-latest"
+                    )
+                    db.add(ai_message)
+                    await db.commit()
+                    logger.info(f"Stream response persisted successfully for session {session.session_id}")
+            except Exception as err:
+                logger.error(f"Error executing SSE stream generator persistence: {err}")
+                
+        return StreamingResponse(event_generator(), media_type="text/event-stream")
+
+    # Otherwise, execute standard non-streaming vector query (backward compatibility)
     stmt = select(RagDocument).where(
         RagDocument.collection_name == payload.collection,
         RagDocument.is_active == True
@@ -57,7 +251,8 @@ async def query_rag_engine(
             "title": doc.title,
             "source_type": doc.source_type,
             "source_path": doc.source_path,
-            "chunk_index": doc.chunk_index
+            "chunk_index": doc.chunk_index,
+            "content": doc.chunk_text
         })
         context_chunks.append(doc.chunk_text)
         reranker_scores.append(round(0.95 - (idx * 0.1), 2))  # Simulated semantic match score
@@ -70,6 +265,30 @@ async def query_rag_engine(
         "sources": sources,
         "confidence": 0.89,
         "reranker_scores": reranker_scores
+    }
+
+@router.get("/documents/{doc_id}")
+async def get_document_content(
+    doc_id: int,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Retrieve the content/chunk_text of a specific document by its doc_id."""
+    stmt = select(RagDocument).where(RagDocument.doc_id == doc_id)
+    res = await db.execute(stmt)
+    doc = res.scalar_one_or_none()
+    if not doc:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Document not found."
+        )
+    return {
+        "doc_id": doc.doc_id,
+        "title": doc.title,
+        "source_type": doc.source_type,
+        "source_path": doc.source_path,
+        "content": doc.chunk_text,
+        "chunk_index": doc.chunk_index
     }
 
 class RagChatPayload(BaseModel):
@@ -254,20 +473,17 @@ async def rag_chat(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Unsupported file format. Please upload a PDF document."
             )
-        import tempfile
         try:
-            suffix = ".pdf"
-            with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as temp_file:
-                temp_file.write(await file.read())
-                temp_file_path = temp_file.name
+            # Save the file permanently to static storage on disk
+            os.makedirs("storage/user_uploads", exist_ok=True)
+            dest_path = os.path.join("storage/user_uploads", file.filename)
+            with open(dest_path, "wb") as f:
+                content = await file.read()
+                f.write(content)
+                await file.seek(0)
                 
             from app.pdf_parser.pdf_extractor import PDFExtractor
-            file_text = PDFExtractor.extract_text(temp_file_path)
-            
-            try:
-                os.remove(temp_file_path)
-            except Exception:
-                pass
+            file_text = PDFExtractor.extract_text(dest_path)
             
             # Save PDF chunks into DB table rag_documents
             if file_text:
@@ -319,7 +535,9 @@ async def rag_chat(
             sources.append({
                 "doc_id": doc.doc_id,
                 "title": doc.title,
-                "source_type": doc.source_type
+                "source_type": doc.source_type,
+                "content": doc.chunk_text,
+                "source_path": doc.source_path
             })
             context_chunks.append(doc.chunk_text)
             
@@ -339,7 +557,9 @@ async def rag_chat(
             sources.append({
                 "doc_id": doc.doc_id,
                 "title": doc.title,
-                "source_type": doc.source_type
+                "source_type": doc.source_type,
+                "content": doc.chunk_text,
+                "source_path": doc.source_path
             })
             context_chunks.append(doc.chunk_text)
     
@@ -601,3 +821,140 @@ async def evaluate_rag_metrics(
         "relevance": 0.92,
         "context_recall": 0.85
     }
+
+@router.get("/stream")
+async def rag_chat_stream(
+    query: str = Query(...),
+    collection: str = Query("careers"),
+    session_id: Optional[int] = Query(None),
+    current_user: User = Depends(get_current_user_from_token_or_query),
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    AI-powered chat endpoint with RAG context streaming Mistral LLM completions 
+    via standard Server-Sent Events (SSE).
+    """
+    import datetime
+    from fastapi.responses import StreamingResponse
+    from app.models.chat import ChatSession, ChatMessage
+    from app.ai_engine.streaming_handler import streaming_handler
+    import json
+    import logging
+    
+    logger = logging.getLogger("rag_stream")
+    
+    # 1. Fetch or create session
+    if session_id:
+        stmt_session = select(ChatSession).where(
+            ChatSession.session_id == session_id,
+            ChatSession.user_id == current_user.user_id
+        )
+        res_session = await db.execute(stmt_session)
+        session = res_session.scalar_one_or_none()
+        if not session:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Specified chat session not found or access denied."
+            )
+    else:
+        stmt_session = (
+            select(ChatSession)
+            .where(ChatSession.user_id == current_user.user_id)
+            .order_by(ChatSession.created_at.desc())
+            .limit(1)
+        )
+        res_session = await db.execute(stmt_session)
+        session = res_session.scalars().first()
+        
+        if not session:
+            session = ChatSession(
+                user_id=current_user.user_id,
+                title=f"Chat {datetime.datetime.now().strftime('%Y-%m-%d %H:%M')}"
+            )
+            db.add(session)
+            await db.flush()
+            
+    # 2. Save user message to database
+    user_message = ChatMessage(
+        session_id=session.session_id,
+        is_user=True,
+        message_text=query
+    )
+    db.add(user_message)
+    await db.flush()
+    
+    # 3. Retrieve RAG Context
+    stmt = select(RagDocument).where(
+        RagDocument.collection_name == collection,
+        RagDocument.is_active == True
+    ).limit(5)
+    
+    res = await db.execute(stmt)
+    documents = res.scalars().all()
+    
+    sources = []
+    context_chunks = []
+    for doc in documents:
+        sources.append({
+            "doc_id": doc.doc_id,
+            "title": doc.title,
+            "source_type": doc.source_type,
+            "content": doc.chunk_text,
+            "source_path": doc.source_path
+        })
+        context_chunks.append(doc.chunk_text)
+        
+    context_block = "\n---\n".join(context_chunks) if context_chunks else ""
+    
+    system_prompt = (
+        "You are an expert AI career guidance counselor for the CareerAI platform. "
+        "Answer user questions about careers, skills, salaries, learning paths, and job markets. "
+        "Be concise, specific, and helpful. Use data from the knowledge base context when available. "
+        "Always give actionable, practical advice."
+    )
+    
+    user_prompt = query
+    if context_block:
+        user_prompt = (
+            f"Knowledge Base Context:\n{context_block}\n\n"
+            f"User Question: {query}\n\n"
+            f"Provide a helpful, concise answer using the context above when relevant."
+        )
+        
+    # 4. Define async generator for SSE response streaming
+    async def event_generator():
+        accumulated_text = []
+        try:
+            async for token_msg in streaming_handler.stream_completion(user_prompt, system_prompt):
+                yield token_msg
+                
+                # Extract text for DB persistence
+                if token_msg.startswith("data: "):
+                    data_str = token_msg[6:].strip()
+                    if data_str != "[DONE]":
+                        try:
+                            chunk = json.loads(data_str)
+                            token = chunk.get("text", "")
+                            if token:
+                                accumulated_text.append(token)
+                        except Exception:
+                            pass
+            
+            # Save complete response once generator finishes
+            full_response = "".join(accumulated_text)
+            if full_response:
+                ai_message = ChatMessage(
+                    session_id=session.session_id,
+                    is_user=False,
+                    message_text=full_response,
+                    confidence=0.95 if context_chunks else 0.85,
+                    sources_json=sources if sources else None,
+                    model_used="mistral-large-latest"
+                )
+                db.add(ai_message)
+                await db.commit()
+                logger.info(f"Stream response persisted successfully for session {session.session_id}")
+        except Exception as err:
+            logger.error(f"Error executing SSE stream generator persistence: {err}")
+            
+    return StreamingResponse(event_generator(), media_type="text/event-stream")

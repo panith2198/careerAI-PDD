@@ -1,0 +1,57 @@
+# Python local caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Virtual Environment
+.venv/
+venv/
+ENV/
+
+# Configuration and secrets
+.env
+checks.md
+
+# Model Cache (except gitkeep)
+models_cache/*
+!models_cache/.gitkeep
+
+# Vector Database (except gitkeep)
+vector_data/*
+!vector_data/.gitkeep
+
+# Temporary and upload storage directories (except gitkeeps)
+storage/resumes/*
+!storage/resumes/.gitkeep
+storage/user_uploads/*
+!storage/user_uploads/.gitkeep
+storage/kb/*
+!storage/kb/.gitkeep
+
+# Empty code templates (allowing gitkeeps to track folders)
+config/*
+!config/.gitkeep
+migrations/*
+!migrations/.gitkeep
+tests/*
+!tests/.gitkeep
+knowledge_base/*
+!knowledge_base/.gitkeep
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE Configurations
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Log and backup files
+*.log
+*.bak
+*.tmp
+.ipynb_checkpoints/
+

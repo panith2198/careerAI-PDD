@@ -3,6 +3,7 @@ import time
 import httpx
 import logging
 from typing import Dict, Any, Optional
+from fastapi import HTTPException
 from app.core.config import settings
 
 logger = logging.getLogger("mistral_client")
@@ -97,11 +98,12 @@ class MistralClient:
         async with httpx.AsyncClient(timeout=60.0) as client:
             for attempt in range(max_retries):
                 try:
-                    # Mock connection fallback if api key is missing to keep dev/staging compilations intact
+                    # Fail if API Key is missing or default placeholder
                     if not self.api_key or self.api_key == "your-mistral-api-key-here":
-                        logger.warning("Mistral API Key is unconfigured. Returning mock schema response.")
-                        breaker.record_success()
-                        return '{"response": "Mock career guidance result: Set MISTRAL_API_KEY in .env to call live LLMs."}'
+                        raise HTTPException(
+                            status_code=500,
+                            detail="Mistral API Key is unconfigured. Please configure MISTRAL_API_KEY in .env."
+                        )
 
                     response = await client.post(
                         f"{self.base_url}/chat/completions",

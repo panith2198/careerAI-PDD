@@ -7,6 +7,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.aicareer.navigator.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -49,6 +51,13 @@ class MainActivity : AppCompatActivity() {
 
         // Handle FCM Deep Linking if app was launched via notification
         intent?.let { handleIntent(it) }
+
+        // Hide bottom navigation bar when soft keyboard (IME) is visible (typing)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
+            val isKeyboardVisible = insets.isVisible(WindowInsetsCompat.Type.ime())
+            binding.bottomNav.visibility = if (isKeyboardVisible) View.GONE else View.VISIBLE
+            ViewCompat.onApplyWindowInsets(view, insets)
+        }
     }
 
     override fun onNewIntent(intent: Intent) {

@@ -21,9 +21,6 @@
         <action
             android:id="@+id/action_home_to_resume_upload"
             app:destination="@id/navigation_resume_upload" />
-        <action
-            android:id="@+id/action_home_to_mentor"
-            app:destination="@id/navigation_mentor" />
     </fragment>
 
     <fragment
@@ -81,9 +78,6 @@
         <action
             android:id="@+id/action_profile_to_resume_upload"
             app:destination="@id/navigation_resume_upload" />
-        <action
-            android:id="@+id/action_profile_to_mentor"
-            app:destination="@id/navigation_mentor" />
         <action
             android:id="@+id/action_profile_to_skills"
             app:destination="@id/navigation_skills" />
@@ -181,19 +175,6 @@
             app:destination="@id/navigation_resume_preview" />
     </fragment>
 
-    <fragment
-        android:id="@+id/navigation_mentor"
-        android:name="com.aicareer.navigator.ui.mentor.MentorFragment"
-        android:label="Mentors"
-        tools:layout="@layout/fragment_mentor">
-        <action
-            android:id="@+id/action_mentor_to_detail"
-            app:destination="@id/navigation_mentor_detail"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
-    </fragment>
 
     <fragment
         android:id="@+id/navigation_settings"
@@ -243,25 +224,6 @@
             app:destination="@id/navigation_assessment" />
     </fragment>
 
-    <fragment
-        android:id="@+id/navigation_mentor_detail"
-        android:name="com.aicareer.navigator.ui.mentor.MentorDetailFragment"
-        android:label="Mentor Profile"
-        tools:layout="@layout/fragment_mentor_detail">
-        <action
-            android:id="@+id/action_detail_to_booking"
-            app:destination="@id/navigation_booking"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/navigation_booking"
-        android:name="com.aicareer.navigator.ui.mentor.BookingFragment"
-        android:label="Book Session"
-        tools:layout="@layout/fragment_booking" />
 
     <fragment
         android:id="@+id/navigation_analytics"
@@ -275,11 +237,6 @@
         android:label="Notifications"
         tools:layout="@layout/fragment_notifications" />
 
-    <fragment
-        android:id="@+id/navigation_admin"
-        android:name="com.aicareer.navigator.ui.admin.AdminDashboardFragment"
-        android:label="Admin Dashboard"
-        tools:layout="@layout/fragment_admin" />
 
     <fragment
         android:id="@+id/navigation_saved_jobs"
