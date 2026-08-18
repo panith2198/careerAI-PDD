@@ -1,0 +1,211 @@
+name: CareerAI Security, E2E, and Load Review
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+env:
+  API_ORIGIN: https://careerai-api.welcos.in
+  API_BASE_URL: https://careerai-api.welcos.in/api/v1
+  WEB_BASE_URL: http://127.0.0.1:5175
+  APPIUM_APP_PATH: ""
+  HEADLESS: "true"
+
+jobs:
+  selenium-web-e2e:
+    name: Selenium Web E2E
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Python report dependencies
+        run: pip install openpyxl
+
+      - name: Generate Selenium test catalog
+        run: python scripts/generate_test_catalogs.py
+
+      - name: Install web dependencies
+        working-directory: web
+        run: npm install
+
+      - name: Build web frontend
+        working-directory: web
+        run: npm run build
+
+      - name: Start local web server
+        working-directory: web
+        run: |
+          mkdir -p ../selenium-tests/reports
+          npm run dev -- --host 127.0.0.1 --port 5175 > ../selenium-tests/reports/vite.log 2>&1 &
+          npx wait-on http://127.0.0.1:5175
+
+      - name: Install Selenium dependencies
+        working-directory: selenium-tests
+        run: npm install
+
+      - name: Run Selenium login/register tests
+        working-directory: selenium-tests
+        run: npm test
+
+      - name: Upload Selenium artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: selenium-web-e2e-reports
+          path: |
+            selenium-tests/**/*.xlsx
+            selenium-tests/reports/**
+
+  appium-mobile-e2e:
+    name: Appium Mobile E2E
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install report dependencies
+        run: pip install openpyxl
+
+      - name: Generate Appium test catalog
+        run: python scripts/generate_test_catalogs.py
+
+      - name: Install Appium test dependencies
+        working-directory: appium-tests
+        run: npm install
+
+      - name: Run Appium tests when app artifact is provided
+        working-directory: appium-tests
+        if: ${{ env.APPIUM_APP_PATH != '' }}
+        run: npm test
+
+      - name: Write Appium skipped runtime note
+        if: ${{ env.APPIUM_APP_PATH == '' }}
+        run: |
+          mkdir -p appium-tests/reports
+          cat > appium-tests/reports/appium-runtime-note.txt <<'EOF'
+          Appium runtime tests were skipped because APPIUM_APP_PATH was not provided.
+          The 300-case Appium Excel catalog was still generated and uploaded.
+          Provide APPIUM_APP_PATH plus a running Appium server/device to execute the mobile E2E runtime suite.
+          EOF
+
+      - name: Upload Appium artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: appium-mobile-e2e-reports
+          path: |
+            appium-tests/**/*.xlsx
+            appium-tests/reports/**
+
+  security-review:
+    name: Backend Security Review
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install security report dependencies
+        run: pip install openpyxl semgrep
+
+      - name: Generate backend security reports
+        run: SECURITY_API_URL="${API_ORIGIN}" python scripts/security_review.py
+
+      - name: Run Semgrep SAST
+        continue-on-error: true
+        run: semgrep scan --config auto --json --output "Vulnerability Test Results/semgrep-report.json" backend
+
+      - name: Run Trivy dependency and filesystem scan
+        uses: aquasecurity/trivy-action@0.28.0
+        continue-on-error: true
+        with:
+          scan-type: fs
+          scan-ref: .
+          format: json
+          output: Vulnerability Test Results/trivy-report.json
+          severity: UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL
+
+      - name: Run Gitleaks secret scan
+        uses: gitleaks/gitleaks-action@v2
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run OWASP Dependency Check
+        uses: dependency-check/Dependency-Check_Action@main
+        continue-on-error: true
+        with:
+          project: CareerAI
+          path: .
+          format: HTML
+          out: "Vulnerability Test Results/dependency-check"
+
+      - name: Publish GitHub Action summary
+        if: always()
+        run: |
+          {
+            echo "## CareerAI Security Review"
+            echo
+            cat "Vulnerability Test Results/executive-summary.md"
+            echo
+            echo "Reports are available in the uploaded artifact."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Fail only on Critical vulnerabilities
+        run: python scripts/fail_on_critical.py
+
+      - name: Upload security artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: backend-security-review-reports
+          path: |
+            Vulnerability Test Results/**
+
+  baseline-load-test:
+    name: k6 Baseline Load Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run k6 baseline load test
+        uses: grafana/k6-action@v0.3.1
+        continue-on-error: true
+        with:
+          filename: load-tests/k6-baseline.js
+          flags: --summary-export load-tests/k6-summary.json
+        env:
+          API_ORIGIN: ${{ env.API_ORIGIN }}
+          VUS: "100"
+          DURATION: "1m"
+
+      - name: Upload load test artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: baseline-load-test-reports
+          path: |
+            load-tests/k6-summary.json
+            load-tests/*.js
