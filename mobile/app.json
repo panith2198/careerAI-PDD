@@ -1,0 +1,27 @@
+{
+  "expo": {
+    "name": "CareerAI",
+    "slug": "careerai-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "ios": {
+      "bundleIdentifier": "com.careerai.mobile",
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.careerai.mobile",
+      "adaptiveIcon": {
+        "backgroundColor": "#090B12",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}

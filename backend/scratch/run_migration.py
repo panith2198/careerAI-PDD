@@ -1,31 +1,32 @@
 import asyncio
 import sys
 sys.stdout.reconfigure(encoding='utf-8')
-sys.path.append("e:/CareerAI/backend")
+from pathlib import Path
+sys.path.append(str(Path(__file__).resolve().parents[1]))
 
 from app.core.database import AsyncSessionLocal
 from sqlalchemy import text
 
 async def main():
     async with AsyncSessionLocal() as session:
+        columns_res = await session.execute(text("SHOW COLUMNS FROM jobs"))
+        existing_columns = {row[0] for row in columns_res.fetchall()}
+
         migrations = [
-            # 1. Add job_url column
-            "ALTER TABLE jobs ADD COLUMN IF NOT EXISTS job_url VARCHAR(500) NULL AFTER external_id",
-            # 2. Add job_url_direct column
-            "ALTER TABLE jobs ADD COLUMN IF NOT EXISTS job_url_direct VARCHAR(500) NULL AFTER job_url",
-            # 3. Add company_url column
-            "ALTER TABLE jobs ADD COLUMN IF NOT EXISTS company_url VARCHAR(300) NULL AFTER company_name",
-            # 4. Add company_logo_url column
-            "ALTER TABLE jobs ADD COLUMN IF NOT EXISTS company_logo_url VARCHAR(500) NULL AFTER company_url",
-            # 5. Add job_type column
-            "ALTER TABLE jobs ADD COLUMN IF NOT EXISTS job_type ENUM('fulltime','parttime','internship','contract') NULL AFTER work_mode",
-            # 6. Add currency column
-            "ALTER TABLE jobs ADD COLUMN IF NOT EXISTS currency VARCHAR(10) DEFAULT 'INR' AFTER salary_max",
-            # 7. Expand source enum
-            "ALTER TABLE jobs MODIFY COLUMN source ENUM('linkedin','naukri','indeed','zip_recruiter','google','glassdoor','internal','manual') NOT NULL",
+            ("job_url", "ALTER TABLE jobs ADD COLUMN job_url VARCHAR(500) NULL AFTER external_id"),
+            ("job_url_direct", "ALTER TABLE jobs ADD COLUMN job_url_direct VARCHAR(500) NULL AFTER job_url"),
+            ("company_url", "ALTER TABLE jobs ADD COLUMN company_url VARCHAR(300) NULL AFTER company_name"),
+            ("company_logo_url", "ALTER TABLE jobs ADD COLUMN company_logo_url VARCHAR(500) NULL AFTER company_url"),
+            ("job_type", "ALTER TABLE jobs ADD COLUMN job_type ENUM('fulltime','parttime','internship','contract') NULL AFTER work_mode"),
+            ("currency", "ALTER TABLE jobs ADD COLUMN currency VARCHAR(10) DEFAULT 'INR' AFTER salary_max"),
+            (None, "ALTER TABLE jobs MODIFY COLUMN source ENUM('linkedin','naukri','indeed','zip_recruiter','google','glassdoor','internal','manual') NOT NULL"),
         ]
         
-        for i, sql in enumerate(migrations, 1):
+        for i, (column_name, sql) in enumerate(migrations, 1):
+            if column_name and column_name in existing_columns:
+                print(f"  ⏭️  Migration {i}/7 skipped (already exists): {column_name}")
+                continue
+
             try:
                 await session.execute(text(sql))
                 await session.commit()

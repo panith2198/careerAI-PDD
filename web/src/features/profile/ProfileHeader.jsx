@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { Edit02Icon, Location01Icon, ImageAdd01Icon, Mail01Icon } from '@hugeicons/core-free-icons';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { API_ORIGIN } from '@/api/api';
 
 export default function ProfileHeader({
   user,
@@ -70,7 +71,7 @@ export default function ProfileHeader({
             )}
             <Avatar className="size-full rounded-full">
               <AvatarImage
-                src={`http://localhost:8000/static/avatars/user_${user?.user_id}.jpg`}
+                src={`${API_ORIGIN}/static/avatars/user_${user?.user_id}.jpg`}
                 alt={fullName}
                 className="size-full object-cover rounded-full"
               />

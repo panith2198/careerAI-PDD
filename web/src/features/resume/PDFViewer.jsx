@@ -3,6 +3,7 @@ import { Document, Page, pdfjs } from 'react-pdf';
 import { motion } from 'framer-motion';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { ArrowLeft01Icon, ArrowRight01Icon, Add01Icon, Remove01Icon } from '@hugeicons/core-free-icons';
+import { API_ORIGIN } from '@/api/api';
 
 // Set up CDN worker script to bypass local bundler issues
 pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
@@ -12,7 +13,7 @@ export default function PDFViewer({ fileUrl }) {
   const [pageNumber, setPageNumber] = useState(1);
   const [scale, setScale] = useState(1.0);
 
-  const finalUrl = fileUrl?.startsWith('/') ? `http://localhost:8000${fileUrl}` : fileUrl;
+  const finalUrl = fileUrl?.startsWith('/') ? `${API_ORIGIN}${fileUrl}` : fileUrl;
 
   const onDocumentLoadSuccess = ({ numPages }) => {
     setNumPages(numPages);

@@ -18,7 +18,7 @@ import {
 } from '@hugeicons/core-free-icons';
 import { toast } from 'sonner';
 
-import api from '@/api/api';
+import api, { API_ORIGIN } from '@/api/api';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -389,7 +389,7 @@ export default function EditProfilePage() {
               <div className="relative group size-32 rounded-full overflow-hidden bg-white/5 border border-white/10 shadow-inner">
                 {user?.file_url ? (
                   <img
-                    src={`http://localhost:8000/static/avatars/user_${user.user_id}.jpg`}
+                    src={`${API_ORIGIN}/static/avatars/user_${user.user_id}.jpg`}
                     alt="Profile Avatar"
                     className="size-full object-cover rounded-full"
                     onError={(e) => {

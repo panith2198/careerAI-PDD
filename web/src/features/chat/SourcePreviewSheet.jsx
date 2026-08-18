@@ -10,7 +10,7 @@ import {
 import MarkdownRenderer from './MarkdownRenderer';
 import PDFViewer from '../resume/PDFViewer';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import api from '@/api/api';
+import api, { API_ORIGIN } from '@/api/api';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function SourcePreviewSheet({ source, onClose }) {
@@ -120,7 +120,7 @@ export default function SourcePreviewSheet({ source, onClose }) {
 
         {pdfUrl && (
           <a
-            href={pdfUrl.startsWith('/') ? `http://localhost:8000${pdfUrl}` : pdfUrl}
+            href={pdfUrl.startsWith('/') ? `${API_ORIGIN}${pdfUrl}` : pdfUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[#22D3EE] hover:text-[#A78BFA] hover:bg-cyan-400/5 transition-all font-semibold cursor-pointer"

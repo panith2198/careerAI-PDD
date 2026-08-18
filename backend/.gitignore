@@ -6,6 +6,7 @@ __pycache__/
 
 # Virtual Environment
 .venv/
+.venv*/
 venv/
 ENV/
 
@@ -54,4 +55,3 @@ Thumbs.db
 *.bak
 *.tmp
 .ipynb_checkpoints/
-

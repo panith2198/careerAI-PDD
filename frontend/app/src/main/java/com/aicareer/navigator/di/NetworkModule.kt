@@ -17,7 +17,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private const val BASE_URL = "http://192.168.31.46:8000/"
+    private const val BASE_URL = "https://careerai-api.welcos.in/"
 
     @Provides
     @Singleton
@@ -91,4 +91,3 @@ object NetworkModule {
         return retrofit.create(com.aicareer.navigator.data.remote.HomeApiService::class.java)
     }
 }
-

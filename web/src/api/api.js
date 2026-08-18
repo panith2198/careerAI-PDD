@@ -1,10 +1,12 @@
 import axios from 'axios';
 import useAuthStore from '@/stores/authStore';
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1';
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://careerai-api.welcos.in/api/v1';
+export const API_ORIGIN =
+  import.meta.env.VITE_API_ORIGIN || API_BASE_URL.replace(/\/api\/v1\/?$/, '');
 
 const instance = axios.create({
-  baseURL: BASE_URL,
+  baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -70,7 +72,7 @@ instance.interceptors.response.use(
         }
 
         // Run direct axios call to avoid interceptor recursion
-        const refreshResponse = await axios.post(`${BASE_URL}/auth/refresh`, {
+        const refreshResponse = await axios.post(`${API_BASE_URL}/auth/refresh`, {
           refresh_token: currentRefreshToken,
         });
 

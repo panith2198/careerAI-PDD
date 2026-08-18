@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import useAuthStore from '@/stores/authStore';
+import { API_BASE_URL } from '@/api/api';
 
 export default function useSSEStream() {
   const [isStreaming, setIsStreaming] = useState(false);
@@ -38,7 +39,7 @@ export default function useSSEStream() {
 
     const runStreamWithRetry = async (attempt = 0) => {
       try {
-        const response = await fetch('http://localhost:8000/api/v1/rag/query', {
+        const response = await fetch(`${API_BASE_URL}/rag/query`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
