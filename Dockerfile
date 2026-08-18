@@ -23,6 +23,7 @@ RUN pip install --upgrade pip \
     && pip install -r requirements.txt
 
 COPY backend/ .
+COPY database/schema.sql database/schema.sql
 
 RUN mkdir -p storage/user_uploads storage/resumes storage/kb vector_data models_cache knowledge_base
 
